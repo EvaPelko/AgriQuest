@@ -18,9 +18,9 @@ terraforming, ecosystem, godot , space, spaceship
 ### Spore
 Jedna od glavnih inspiracija je Spore. 
 
-Spore je razvio Electronic Arts (EA), te je njezin prihvat bio manje nego idealan. U demonstraciji igre, pokazane su stadiji igre koji nisu bili u finalnoj verziji. Usprkos klimavom početku, igra se zacementirala kao inovativna i zabavna. 
+Spore je 2008. godine razvio američki studio za igre Maxis, te je njezin prihvat bio manje nego idealan. U demonstraciji igre, pokazane su stadiji igre koji nisu bili u finalnoj verziji. Usprkos klimavom početku, igra se zacementirala kao inovativna i zabavna. 
 
-Igrač igra kao životinja koja prolazi kroz stadije evolucije. Treba izbjeći sve prijetnje, pronaći hranu i razviti se da preživi. Stadiji se kreću od molekularne stanice do svemirske postaje. Inspiracija za temu ovog diplomskog rada je stadij svemira i terraforming planeta.
+Igrač igra kao životinja koja prolazi kroz stadije evolucije. Treba izbjeći sve prijetnje, pronaći hranu i razviti se da preživi. Stadiji se kreću od molekularne stanice do svemirske postaje. Inspiracija za temu ovog diplomskog rada je stadij svemira i terraforming planeta. Igra nije znanstveno točna, te je bila kritizirana zbog lošeg prikaza evolucije.
 
 ### No Man's Sky
 No Man's Sky je jedna od igrica koje su iskrsnule iz pepela lošeg launch perioda. Igra je bila univerzalno mržnjena, sve dok nisu popravili mnoge stvari.
@@ -64,6 +64,16 @@ Treći Keplerov zakon ustanovljen je tek za desetljeće, u djelu pod nazivom *Ha
 
 Što čini planet nastanjivim? Koje su predispozicije potrebne da uopće probamo teraformirati neki planet? 
 
+### Nastanjiva zona
+https://science.nasa.gov/exoplanets/habitable-zone/ 
+U astronomiji i astrobiologiji, nastanjiva zona, također poznata kao "Goldilocks zone", je raspon orbita oko zvijezde unutar kojeg bi planetarna površina potencijalno mogla podržavati tekuću vodu. Tekuća voda smatra se osnovnom potrebom za potporu života.
+
+![Nastanjiva zona](https://assets.science.nasa.gov/dynamicimage/assets/science/astro/exo-explore/internal_resources/1219/hab_zone-1.jpeg?w=782&h=587&fit=clip&crop=faces%2Cfocalpoint)
+
+Egzoplanet (ili ekstrasolarni planet) je bilo koji planet koji se nalazi izvan našeg Sunčevog sustava, a većina njih kruži oko drugih zvijezda. Neki slobodno plutajući egzoplaneti, nazvani "rogue" planeti, nisu vezani ni za jednu zvijezdu. Potvrdili smo više od 6000 egzoplaneta, od milijardi za koje vjerujemo da postoje.
+
+https://eyes.nasa.gov/apps/exo/#/ 
+
 ### Teraformiranje
 https://d1wqtxts1xzle7.cloudfront.net/31692987/chapter0-libre.pdf?1391434633=&response-content-disposition=inline%3B+filename%3DFront_Cover_Foreword_Preface_Glossary.pdf&Expires=1782170723&Signature=EkKbPoBmiIaPJfvES4a8wVsxNLBIVE9Llo31XIWX7a26xZIfhEzO-ZRGJ79FaXLZytYMJbt-GrDzHBfTGRv4iYuv~EZ9BR8gTby8ISe0L8dRwveSMRzaKKXRw9wTS2op8rAosfN-CtEz9eHUMqDanNe7ylBkqFGqbgHYU5vXZOkQX-Um5jg8YwQYmw9gU7HITw9E98wTK2mBH5dteKTtHKVosG6kB6I8C9I3lDOQcBs9ZndFvR5wE8-lB2-9tbshNAEwcKujvfMzh0~ZlQ8xDMt5peUSZ1GjZ73D8TNjMStQ5xoMbMoiaC34dxC8xszYV0bHCMLn0r7CAR2SA3FpbA__&Key-Pair-Id=APKAJLOHF5GGSLRBV4ZA$0 
 [4]
@@ -88,3 +98,4 @@ I načini na koje se mijenjaju značajke
 [2] Britannica Editors (2026, May 22). Kepler’s laws of planetary motion. Encyclopedia Britannica. https://www.britannica.com/science/Keplers-laws-of-planetary-motion 
 [3] Kepler, J. (2010). The six-cornered snowflake. Paul Dry Books.
 [4] Fogg, M. (1995). Terraforming. Engineering Planetary Environments. SAE International, Warrendale, PA.
+https://en.wikipedia.org/wiki/Rare_Earth_hypothesis 
