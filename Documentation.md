@@ -74,6 +74,21 @@ Egzoplanet (ili ekstrasolarni planet) je bilo koji planet koji se nalazi izvan n
 
 https://eyes.nasa.gov/apps/exo/#/ 
 
+### Karakteristike naseljivih planeta
+
+Planeti male mase loši su kandidati za život iz dva razloga. Prvo, njihova manja gravitacija otežava zadržavanje atmosfere. Tamo gdje je atmosfera manje gustoće od 0,006 Zemljine atmosfere, voda ne može postojati u tekućem obliku jer se ne postiže potreban atmosferski tlak od 4,56 mm Hg (608 Pa) (0,18 inch Hg). Osim toga, smanjeni tlak smanjuje raspon temperatura na kojima je voda tekuća. Drugo, manji planeti imaju manji promjer i stoga veći omjer površine i volumena. To uzrokuje brzi gubitak energije preostale od njihovog formiranja i kao rezultat oni završe geološki mrtvi, bez vulkana, potresa i tektonske aktivnosti koja opskrbljuje površinu materijalom za održavanje života, a atmosferu moderatorima temperature poput ugljikovog dioksida. Masa potencijalno nastanjivog egzoplaneta je između 0,1 i 3,0 Zemljine mase.
+
+
+https://phl.upr.edu/hwc
+
+Eksentričnost orbite je razlika između najudaljenijeg i najbližeg približavanja planeta matičnoj zvijezdi podijeljena zbrojem navedenih udaljenosti. To je omjer koji opisuje oblik eliptične orbite. Što je ekscentričnost veća, to su veće temperaturne fluktuacije na površini planeta. Iako su prilagodljivi, živi organizmi mogu podnijeti samo određene varijacije, posebno ako se fluktuacije preklapaju i s točkom smrzavanja i s točkom vrelišta vode. Što je organizam složeniji, to je veća temperaturna osjetljivost. Zemljina orbita je gotovo savršeno kružna, s ekscentricitetom manjim od 0,02.
+
+Planet bi se trebao relativno brzo okretati kako ciklus dana i noći ne bi bio predug. Ako dan traje godinama, temperaturna razlika između dnevne i noćne strane bit će izražena, a problemi slični onima uočenim kod ekstremne orbitalne ekscentričnosti doći će do izražaja.
+
+Pretpostavlja da će svaki izvanzemaljski život biti utemeljen na istoj temeljnoj biokemiji kao ona na Zemlji, budući da su četiri elementa najvažnija za život, ugljik, vodik, kisik i dušik, ujedno i najčešći kemijski reaktivni elementi u svemiru.
+
+
+
 ### Teraformiranje
 https://d1wqtxts1xzle7.cloudfront.net/31692987/chapter0-libre.pdf?1391434633=&response-content-disposition=inline%3B+filename%3DFront_Cover_Foreword_Preface_Glossary.pdf&Expires=1782170723&Signature=EkKbPoBmiIaPJfvES4a8wVsxNLBIVE9Llo31XIWX7a26xZIfhEzO-ZRGJ79FaXLZytYMJbt-GrDzHBfTGRv4iYuv~EZ9BR8gTby8ISe0L8dRwveSMRzaKKXRw9wTS2op8rAosfN-CtEz9eHUMqDanNe7ylBkqFGqbgHYU5vXZOkQX-Um5jg8YwQYmw9gU7HITw9E98wTK2mBH5dteKTtHKVosG6kB6I8C9I3lDOQcBs9ZndFvR5wE8-lB2-9tbshNAEwcKujvfMzh0~ZlQ8xDMt5peUSZ1GjZ73D8TNjMStQ5xoMbMoiaC34dxC8xszYV0bHCMLn0r7CAR2SA3FpbA__&Key-Pair-Id=APKAJLOHF5GGSLRBV4ZA$0 
 [4]
