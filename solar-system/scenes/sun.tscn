@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://cney8m3ajtl6a"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pyfwd"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_pyfwd"]
+
+[node name="Sun" type="Node2D" unique_id=1024953742]
+
+[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatableBody2D" unique_id=1826593461]
+shape = SubResource("CircleShape2D_pyfwd")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="AnimatableBody2D" unique_id=1490640172]
+modulate = Color(0.5848548, 0.44410685, 1.92523e-07, 1)
+position = Vector2(0, 1.9073486e-06)
+scale = Vector2(37.855305, 37.855312)
+mesh = SubResource("SphereMesh_pyfwd")
