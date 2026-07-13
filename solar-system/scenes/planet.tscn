@@ -8,8 +8,19 @@
 
 [node name="Planet" type="Node2D" unique_id=1024953742]
 
-[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=831644530]
+
+[node name="Label" type="Label" parent="CanvasLayer" unique_id=2012561616]
+offset_left = 60.0
+offset_top = -62.0
+offset_right = 100.0
+offset_bottom = -39.0
+text = "test"
+metadata/_edit_use_anchors_ = true
+
+[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719 node_paths=PackedStringArray("speed_label")]
 script = ExtResource("1_cktii")
+speed_label = NodePath("../CanvasLayer/Label")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatableBody2D" unique_id=1826593461]
 shape = SubResource("CircleShape2D_pyfwd")
