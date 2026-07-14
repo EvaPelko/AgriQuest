@@ -11,11 +11,11 @@
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=831644530]
 
 [node name="Label" type="Label" parent="CanvasLayer" unique_id=2012561616]
-offset_left = 60.0
-offset_top = -62.0
-offset_right = 100.0
-offset_bottom = -39.0
-text = "test"
+offset_left = 29.0
+offset_top = 30.0
+offset_right = 151.0
+offset_bottom = 53.0
+text = "Speed: 0.0 km/s"
 metadata/_edit_use_anchors_ = true
 
 [node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719 node_paths=PackedStringArray("speed_label")]

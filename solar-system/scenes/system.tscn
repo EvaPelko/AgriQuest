@@ -7,7 +7,7 @@
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=923855365]
 
-[node name="Planet2" parent="." unique_id=205101820 instance=ExtResource("2_0i2li")]
+[node name="Star" parent="." unique_id=205101820 instance=ExtResource("2_0i2li")]
 
 [node name="EarthOrbit" type="Node2D" parent="." unique_id=362061960]
 

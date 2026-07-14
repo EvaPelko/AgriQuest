@@ -1,7 +1,7 @@
 extends AnimatableBody2D
 
 @export var semi_major_axis: float = 150.0  # Size of the orbit
-@export var eccentricity: float = 0.5     # Oval shape (0 = perfect circle, 0.9 = flat oval)
+@export var eccentricity: float = 0.1     # Oval shape (0 = perfect circle, 0.9 = flat oval)
 @export var max_trail_length: int = 50 # Controls how long the trail is
 #@export var orbit_speed: float = 20000.0 
 @export var star_gravity_strength: float = 500000.0
@@ -48,6 +48,8 @@ func _process(delta: float) -> void:
 			# "%.1f" rounds the speed to 1 decimal place
 			speed_label.text = "Planet Speed: " + str("%.1f" % linear_speed_km) + " km/s"
 			print(str("%.1f" % linear_speed_km))
+		else:
+			print("Label is missing from the Inspector! Current Speed: ", linear_speed_km)
 	
 	# POSITIONING & RENDER LOGIC
 	# Conversion from polar coordinates (r, θ) to Cartesian coordinates (x, y)
