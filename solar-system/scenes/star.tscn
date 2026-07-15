@@ -6,9 +6,9 @@
 
 [sub_resource type="SphereMesh" id="SphereMesh_pyfwd"]
 
-[node name="Sun" type="Node2D" unique_id=1024953742]
+[node name="Star" type="Node2D" unique_id=1024953742]
 
-[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719]
+[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719 groups=["star"]]
 script = ExtResource("1_cojbh")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatableBody2D" unique_id=1826593461]

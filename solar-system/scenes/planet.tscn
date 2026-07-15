@@ -10,17 +10,24 @@
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=831644530]
 
-[node name="Label" type="Label" parent="CanvasLayer" unique_id=2012561616]
+[node name="Label2" type="Label" parent="CanvasLayer" unique_id=2002577599]
 offset_left = 29.0
 offset_top = 30.0
-offset_right = 151.0
+offset_right = 69.0
 offset_bottom = 53.0
+
+[node name="Label" type="Label" parent="CanvasLayer" unique_id=2012561616]
+offset_left = 29.0
+offset_top = 60.0
+offset_right = 151.0
+offset_bottom = 83.0
 text = "Speed: 0.0 km/s"
 metadata/_edit_use_anchors_ = true
 
-[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719 node_paths=PackedStringArray("speed_label")]
+[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719 node_paths=PackedStringArray("speed_label", "habitability_label")]
 script = ExtResource("1_cktii")
 speed_label = NodePath("../CanvasLayer/Label")
+habitability_label = NodePath("../CanvasLayer/Label2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatableBody2D" unique_id=1826593461]
 shape = SubResource("CircleShape2D_pyfwd")

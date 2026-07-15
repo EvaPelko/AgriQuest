@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://1wcw3qfnn46l"]
 
 [ext_resource type="PackedScene" uid="uid://b404xmkuduyj5" path="res://scenes/planet.tscn" id="1_68j0k"]
-[ext_resource type="PackedScene" uid="uid://cney8m3ajtl6a" path="res://scenes/sun.tscn" id="2_0i2li"]
+[ext_resource type="PackedScene" uid="uid://cney8m3ajtl6a" path="res://scenes/star.tscn" id="2_0i2li"]
 
 [node name="Node2D" type="Node2D" unique_id=669897972]
 
