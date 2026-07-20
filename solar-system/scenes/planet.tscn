@@ -24,10 +24,9 @@ offset_bottom = 83.0
 text = "Speed: 0.0 km/s"
 metadata/_edit_use_anchors_ = true
 
-[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719 node_paths=PackedStringArray("speed_label", "habitability_label")]
+[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719]
+input_pickable = true
 script = ExtResource("1_cktii")
-speed_label = NodePath("../CanvasLayer/Label")
-habitability_label = NodePath("../CanvasLayer/Label2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatableBody2D" unique_id=1826593461]
 shape = SubResource("CircleShape2D_pyfwd")

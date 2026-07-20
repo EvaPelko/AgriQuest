@@ -6,14 +6,20 @@ extends AnimatableBody2D
 @export var max_trail_length: int = 50 # Controls how long the trail is
 #@export var orbit_speed: float = 20000.0 
 #@export var star_gravity_strength: float = 500000.0
-# How many kilometers 1 pixel represents in the game universe
 
 @export_category("Astronomical Reference")
+# How many kilometers 1 pixel represents in the game universe
 @export var pixel_to_km_scale: float = 0.5
 
 @export_category("UI Connections")
 @export var speed_label: Label
 @export var habitability_label: Label
+
+# --- SELECTION & VISUALS ---
+var is_selected: bool = false:
+	set(value):
+		is_selected = value
+		queue_redraw()
 
 var star_node: SolarStar
 
@@ -23,6 +29,9 @@ var angle: float = 0.0
 func _ready():
 	# unpins the line from the planet's movement
 	line_2d.top_level = true
+	
+	# Start with UI labels and highlight hidden
+	set_ui_visible(false)
 	
 	# wait until the scene tree is 100% finished loading 
 	# before running star search
@@ -62,10 +71,9 @@ func _process(delta: float) -> void:
 		
 		# Update the label text if it has been assigned
 		if speed_label:
-			
 			# "%.1f" rounds the speed to 1 decimal place
 			speed_label.text = "Planet Speed: " + str("%.1f" % linear_speed_km) + " km/s"
-			print(str("%.1f" % linear_speed_km))
+			#print(str("%.1f" % linear_speed_km))
 		else:
 			print("Label is missing from the Inspector! Current Speed: ", linear_speed_km)
 	
@@ -111,3 +119,37 @@ func find_star_and_check() -> void:
 		check_orbit_habitability()
 	else:
 		push_error("No star found in the 'star' group! Please check your Star node's groups.")
+
+# --- NEW CLICK DETECTION AND TOGGLE SYSTEM ---
+
+func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		#print("pressed!")
+		get_viewport().set_input_as_handled()
+		select_planet()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		deselect_planet()
+
+func select_planet() -> void:
+	get_tree().call_group("planets", "deselect_planet")
+	set_ui_visible(true)
+
+func deselect_planet() -> void:
+	set_ui_visible(false)
+
+# Helper function to clean up UI visibility toggling
+func set_ui_visible(visible_state: bool) -> void:
+	is_selected = visible_state # This updates the variable and fires queue_redraw()
+	if speed_label:
+		speed_label.visible = visible_state
+	if habitability_label:
+		habitability_label.visible = visible_state
+
+# Builtin draw function: Draws a  vector circle when selected
+func _draw() -> void:
+	if is_selected:
+		# Draw a hollow circle around the planet center
+		# (Center, Radius: 25px, Start angle, End angle, Points, Color: Cyan, Thickness: 2.0px)
+		draw_arc(Vector2.ZERO, 25.0, 0.0, TAU, 32, Color(0.0, 1.0, 1.0, 0.8), 2.0)

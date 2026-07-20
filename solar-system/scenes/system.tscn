@@ -12,3 +12,19 @@
 [node name="EarthOrbit" type="Node2D" parent="." unique_id=362061960]
 
 [node name="Planet" parent="EarthOrbit" unique_id=1024953742 instance=ExtResource("1_68j0k")]
+
+[node name="AnimatableBody2D" parent="EarthOrbit/Planet" index="1" unique_id=1389764719 node_paths=PackedStringArray("speed_label", "habitability_label")]
+speed_label = NodePath("../CanvasLayer/Label")
+habitability_label = NodePath("../CanvasLayer/Label2")
+
+[node name="MarsOrbit" type="Node2D" parent="." unique_id=1604189839]
+
+[node name="Planet2" parent="MarsOrbit" unique_id=1294353069 instance=ExtResource("1_68j0k")]
+
+[node name="AnimatableBody2D" parent="MarsOrbit/Planet2" index="1" unique_id=1389764719 node_paths=PackedStringArray("speed_label", "habitability_label")]
+semi_major_axis = 100.0
+speed_label = NodePath("../CanvasLayer/Label")
+habitability_label = NodePath("../CanvasLayer/Label2")
+
+[editable path="EarthOrbit/Planet"]
+[editable path="MarsOrbit/Planet2"]
