@@ -6,6 +6,10 @@
 
 [sub_resource type="SphereMesh" id="SphereMesh_pyfwd"]
 
+[sub_resource type="Gradient" id="Gradient_cktii"]
+offsets = PackedFloat32Array(0, 0.21568628, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0.72464263, 0.7246426, 0.7246426, 0.54509807, 0.8474744, 0.84747446, 0.84747446, 1)
+
 [node name="Planet" type="Node2D" unique_id=1024953742]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=831644530]
@@ -38,5 +42,7 @@ scale = Vector2(19.647112, 19.647114)
 mesh = SubResource("SphereMesh_pyfwd")
 
 [node name="Line2D" type="Line2D" parent="AnimatableBody2D" unique_id=767158059]
+z_index = -1
 width = 2.0
 default_color = Color(0.93333334, 0.9490196, 1, 0.58431375)
+gradient = SubResource("Gradient_cktii")

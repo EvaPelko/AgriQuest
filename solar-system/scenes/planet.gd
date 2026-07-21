@@ -3,7 +3,7 @@ extends AnimatableBody2D
 @export_category("Orbit Configuration")
 @export var semi_major_axis: float = 160.0  # Size of the orbit
 @export var eccentricity: float = 0.05     # Oval shape (0 = perfect circle, 0.9 = flat oval)
-@export var max_trail_length: int = 50 # Controls how long the trail is
+@export var max_trail_length: int = 200 # Controls how long the trail is
 #@export var orbit_speed: float = 20000.0 
 #@export var star_gravity_strength: float = 500000.0
 
@@ -85,9 +85,10 @@ func _process(delta: float) -> void:
 	position = Vector2(x, y)
 	
 	# --- Trail Logic ---
-	line_2d.add_point(global_position)
-	if line_2d.get_point_count() > max_trail_length:
-		line_2d.remove_point(0)
+	if position != Vector2.ZERO:
+		line_2d.add_point(global_position)
+		if line_2d.get_point_count() > max_trail_length:
+			line_2d.remove_point(0)
 		
 	# Mathematically checks if the entire elliptical orbit resides in the Goldilocks zone
 func check_orbit_habitability() -> void:
