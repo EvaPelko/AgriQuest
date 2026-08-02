@@ -1,8 +1,9 @@
-[gd_scene format=3 uid="uid://b404xmkuduyj5"]
+[gd_scene format=3 uid="uid://b1j8yb7pbjslp"]
 
-[ext_resource type="Script" uid="uid://b57wfh0i21ki0" path="res://scripts/planet.gd" id="1_cktii"]
+[ext_resource type="Script" uid="uid://5trlqp8555i3" path="res://scripts/moon.gd" id="1_530pw"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pyfwd"]
+radius = 3.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_pyfwd"]
 
@@ -10,7 +11,7 @@
 offsets = PackedFloat32Array(0, 0.21568628, 1)
 colors = PackedColorArray(0, 0, 0, 0, 0.72464263, 0.7246426, 0.7246426, 0.54509807, 0.8474744, 0.84747446, 0.84747446, 1)
 
-[node name="Planet" type="Node2D" unique_id=1024953742]
+[node name="Moon" type="Node2D" unique_id=1024953742]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=831644530]
 
@@ -28,25 +29,17 @@ offset_bottom = 83.0
 text = "Speed: 0.0 km/s"
 metadata/_edit_use_anchors_ = true
 
-[node name="name" type="Label" parent="CanvasLayer" unique_id=862411548]
-offset_left = 31.0
-offset_top = 99.0
-offset_right = 71.0
-offset_bottom = 122.0
-text = "Name"
-
-[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719 node_paths=PackedStringArray("name_label")]
+[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719]
 input_pickable = true
-script = ExtResource("1_cktii")
-name_label = NodePath("../CanvasLayer/name")
+script = ExtResource("1_530pw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatableBody2D" unique_id=1826593461]
 shape = SubResource("CircleShape2D_pyfwd")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="AnimatableBody2D" unique_id=1490640172]
 modulate = Color(0.49411765, 0.34901962, 1, 1)
-position = Vector2(1.4901161e-08, 1.4901161e-08)
-scale = Vector2(19.647112, 19.647114)
+position = Vector2(-4.7683716e-07, -4.7683716e-07)
+scale = Vector2(6.8201537, 6.8201556)
 mesh = SubResource("SphereMesh_pyfwd")
 
 [node name="Line2D" type="Line2D" parent="AnimatableBody2D" unique_id=767158059]

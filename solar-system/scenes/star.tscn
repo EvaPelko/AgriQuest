@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cney8m3ajtl6a"]
 
-[ext_resource type="Script" uid="uid://dbm5vjkh5nwai" path="res://scenes/star.gd" id="1_cojbh"]
+[ext_resource type="Script" uid="uid://dbm5vjkh5nwai" path="res://scripts/star.gd" id="1_cojbh"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pyfwd"]
 
