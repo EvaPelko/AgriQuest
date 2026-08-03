@@ -35,7 +35,7 @@ offset_right = 71.0
 offset_bottom = 122.0
 text = "Name"
 
-[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719 node_paths=PackedStringArray("name_label")]
+[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719 node_paths=PackedStringArray("name_label") groups=["planets"]]
 input_pickable = true
 script = ExtResource("1_cktii")
 name_label = NodePath("../CanvasLayer/name")

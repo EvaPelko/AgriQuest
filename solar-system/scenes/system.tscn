@@ -1,28 +1,35 @@
 [gd_scene format=3 uid="uid://1wcw3qfnn46l"]
 
 [ext_resource type="PackedScene" uid="uid://b404xmkuduyj5" path="res://scenes/planet.tscn" id="1_68j0k"]
+[ext_resource type="Script" uid="uid://b8axq2rofaoy8" path="res://scripts/MainSystem.gd" id="1_licsr"]
 [ext_resource type="PackedScene" uid="uid://cney8m3ajtl6a" path="res://scenes/star.tscn" id="2_0i2li"]
 [ext_resource type="PackedScene" uid="uid://b1j8yb7pbjslp" path="res://scenes/moon.tscn" id="3_rec6r"]
 
-[node name="Node2D" type="Node2D" unique_id=669897972]
+[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button")]
+script = ExtResource("1_licsr")
+camera = NodePath("Camera2D")
+terraform_button = NodePath("CanvasLayer/SelectionPanel/TerraformButton")
+orbit_button = NodePath("CanvasLayer/SelectionPanel/OrbitButton")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=923855365]
 
-[node name="Star" parent="." unique_id=205101820 instance=ExtResource("2_0i2li")]
+[node name="SystemMap" type="Node2D" parent="." unique_id=144816583]
 
-[node name="EarthOrbit" type="Node2D" parent="." unique_id=362061960]
+[node name="Star" parent="SystemMap" unique_id=205101820 instance=ExtResource("2_0i2li")]
 
-[node name="Planet" parent="EarthOrbit" unique_id=1024953742 instance=ExtResource("1_68j0k")]
+[node name="EarthOrbit" type="Node2D" parent="SystemMap" unique_id=362061960]
 
-[node name="AnimatableBody2D" parent="EarthOrbit/Planet" index="1" unique_id=1389764719 node_paths=PackedStringArray("orbit_target", "speed_label", "habitability_label")]
+[node name="Planet" parent="SystemMap/EarthOrbit" unique_id=1024953742 instance=ExtResource("1_68j0k")]
+
+[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet" index="1" unique_id=1389764719 node_paths=PackedStringArray("orbit_target", "speed_label", "habitability_label")]
 object_name = "Earth"
 orbit_target = NodePath("../../../Star/AnimatableBody2D")
 speed_label = NodePath("../CanvasLayer/Label")
 habitability_label = NodePath("../CanvasLayer/Label2")
 
-[node name="Moon" parent="EarthOrbit/Planet/AnimatableBody2D" index="3" unique_id=931381539 instance=ExtResource("3_rec6r")]
+[node name="Moon" parent="SystemMap/EarthOrbit/Planet/AnimatableBody2D" index="3" unique_id=931381539 instance=ExtResource("3_rec6r")]
 
-[node name="AnimatableBody2D" parent="EarthOrbit/Planet/AnimatableBody2D/Moon" index="1" unique_id=1389764719 node_paths=PackedStringArray("orbit_target", "speed_label", "habitability_label")]
+[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet/AnimatableBody2D/Moon" index="1" unique_id=1389764719 node_paths=PackedStringArray("orbit_target", "speed_label", "habitability_label")]
 object_name = "Moon name"
 semi_major_axis = 30.0
 max_trail_length = 20
@@ -30,11 +37,11 @@ orbit_target = NodePath("../..")
 speed_label = NodePath("../CanvasLayer/Label")
 habitability_label = NodePath("../CanvasLayer/Label2")
 
-[node name="MarsOrbit" type="Node2D" parent="." unique_id=1604189839]
+[node name="MarsOrbit" type="Node2D" parent="SystemMap" unique_id=1604189839]
 
-[node name="Planet2" parent="MarsOrbit" unique_id=1294353069 instance=ExtResource("1_68j0k")]
+[node name="Planet2" parent="SystemMap/MarsOrbit" unique_id=1294353069 instance=ExtResource("1_68j0k")]
 
-[node name="AnimatableBody2D" parent="MarsOrbit/Planet2" index="1" unique_id=1389764719 node_paths=PackedStringArray("orbit_target", "speed_label", "habitability_label")]
+[node name="AnimatableBody2D" parent="SystemMap/MarsOrbit/Planet2" index="1" unique_id=1389764719 node_paths=PackedStringArray("orbit_target", "speed_label", "habitability_label")]
 object_name = "Mars"
 semi_major_axis = 100.0
 eccentricity = 0.5
@@ -42,7 +49,26 @@ orbit_target = NodePath("../../../Star/AnimatableBody2D")
 speed_label = NodePath("../CanvasLayer/Label")
 habitability_label = NodePath("../CanvasLayer/Label2")
 
-[editable path="Star"]
-[editable path="EarthOrbit/Planet"]
-[editable path="EarthOrbit/Planet/AnimatableBody2D/Moon"]
-[editable path="MarsOrbit/Planet2"]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1293292192]
+
+[node name="SelectionPanel" type="CanvasLayer" parent="CanvasLayer" unique_id=122829527]
+
+[node name="TerraformButton" type="Button" parent="CanvasLayer/SelectionPanel" unique_id=1975951674]
+offset_left = 924.0
+offset_top = 558.0
+offset_right = 1114.0
+offset_bottom = 612.0
+text = "Terraform"
+
+[node name="OrbitButton" type="Button" parent="CanvasLayer/SelectionPanel" unique_id=1717066153]
+offset_left = 38.0
+offset_top = 560.0
+offset_right = 228.0
+offset_bottom = 614.0
+text = "Back to orbit"
+
+[node name="TerraformingHUD" type="CanvasLayer" parent="CanvasLayer" unique_id=784360361]
+
+[editable path="SystemMap/EarthOrbit/Planet"]
+[editable path="SystemMap/EarthOrbit/Planet/AnimatableBody2D/Moon"]
+[editable path="SystemMap/MarsOrbit/Planet2"]

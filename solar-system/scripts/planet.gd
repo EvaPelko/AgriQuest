@@ -28,6 +28,9 @@ extends AnimatableBody2D
 @export var speed_label: Label
 @export var habitability_label: Label
 
+signal planet_selected(planet_ref: Node2D)
+signal planet_deselected
+
 # --- SELECTION & VISUALS ---
 var is_selected: bool = false:
 	set(value):
@@ -48,6 +51,7 @@ func _ready() -> void:
 	
 	if name_label:
 		name_label.text = object_name
+		
 	# wait until the scene tree is 100% finished loading 
 	# before running orbit target search
 	call_deferred("setup_orbit_target")
@@ -163,9 +167,11 @@ func _unhandled_input(event: InputEvent) -> void:
 func select_planet() -> void:
 	get_tree().call_group("planets", "deselect_planet")
 	set_ui_visible(true)
+	planet_selected.emit(self)
 
 func deselect_planet() -> void:
 	set_ui_visible(false)
+	planet_deselected.emit()
 
 func set_ui_visible(visible_state: bool) -> void:
 	is_selected = visible_state
