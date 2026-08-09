@@ -9,19 +9,27 @@ extends AnimatableBody2D
 			name_label.text = object_name
 
 @export_category("Orbit Configuration")
-@export var semi_major_axis: float = 160.0  # Size of the orbit
-@export var eccentricity: float = 0.05     # Oval shape (0 = perfect circle, 0.9 = flat oval)
-@export var max_trail_length: int = 200 # Controls how long the trail is
+@export var semi_major_axis: float = 160.0: # Size of the orbit
+	set(value):
+		semi_major_axis = max(20.0, value)
+		check_orbit_habitability()
+		draw_orbit_ring()
 
-# If left empty, it defaults to orbiting the Star
-@export var orbit_target: Node2D 
+@export var eccentricity: float = 0.05: # Oval shape (0 = perfect circle, 0.9 = flat oval)
+	set(value):
+		eccentricity = clamp(value, 0.0, 0.85)
+		check_orbit_habitability()
+		draw_orbit_ring()
 
-# Fallback gravity used ONLY if the assigned target doesn't specify its own gravity
-@export var default_local_gravity: float = 5000.0
+@export var max_trail_length: int = 200
 
-@export_category("Astronomical Reference")
-# How many kilometers 1 pixel represents in the game universe
-@export var pixel_to_km_scale: float = 0.5
+@export_category("Gizmo Setup")
+@export var gizmo_handle: OrbitGizmoHandle
+
+# Orbital gravity target
+@export var orbit_target: Node2D # If left empty, it defaults to orbiting the Star
+@export var default_local_gravity: float = 5000.0 # Fallback gravity used ONLY if the assigned target doesn't specify its own gravity
+@export var pixel_to_km_scale: float = 0.5 # How many kilometers 1 pixel represents in the game universe
 
 @export_category("UI Connections")
 @export var name_label: Label
@@ -31,27 +39,34 @@ extends AnimatableBody2D
 signal planet_selected(planet_ref: Node2D)
 signal planet_deselected
 
-# --- SELECTION & VISUALS ---
-var is_selected: bool = false:
-	set(value):
-		is_selected = value
-		queue_redraw()
+# --- VISUAL CONSTANTS ---
+const DIM_ALPHA: float = 0.25
+const HIGHLIGHT_ALPHA: float = 0.8
 
+var is_selected: bool = false
 var star_node: SolarStar
 var active_gravity_strength: float = 500000.0
 var angle: float = 0.0
-@onready var line_2d: Line2D = $Line2D
+
+@onready var movement_trail: Line2D = $MovementTrail
+@onready var orbit_ring: Line2D = $OrbitRing
 
 func _ready() -> void:
-	line_2d.top_level = true
-	line_2d.z_index = -1
-	line_2d.clear_points()
+	if movement_trail:
+		movement_trail.top_level = true
+		movement_trail.z_index = -2
+		
+	if orbit_ring:
+		orbit_ring.top_level = true
+		orbit_ring.z_index = -1
+		# Start at low transparency by default
+		orbit_ring.modulate.a = DIM_ALPHA
 	
 	set_ui_visible(false)
 	
-	if name_label:
-		name_label.text = object_name
-		
+	if gizmo_handle:
+		gizmo_handle.orbit_resized.connect(_on_orbit_resized_by_gizmo)
+	
 	# wait until the scene tree is 100% finished loading 
 	# before running orbit target search
 	call_deferred("setup_orbit_target")
@@ -69,23 +84,21 @@ func setup_orbit_target() -> void:
 			
 		if orbit_target is SolarStar:
 			star_node = orbit_target as SolarStar
-
-	# 2. DEFAULT: No target assigned -> Find central Star and fetch ITS gravity!
+	# 2. DEFAULT: No target assigned -> Find central Star and fetch ITS gravity
 	else:
 		var found_stars = get_tree().get_nodes_in_group("star")
 		if found_stars.size() > 0:
 			star_node = found_stars[0] as SolarStar
 			orbit_target = star_node
-			
 			# Pull gravity directly from the star node
 			if "star_gravity_strength" in star_node:
 				active_gravity_strength = star_node.star_gravity_strength
-			else:
-				push_warning("Star node found, but missing 'star_gravity_strength' property.")
 		else:
 			push_error("No orbit_target assigned and no Star found in 'star' group!")
 
 	check_orbit_habitability()
+	# Draw the permanent full orbit ring once scene loading completes
+	draw_orbit_ring()
 
 func _process(delta: float) -> void:
 	if not orbit_target:
@@ -125,11 +138,74 @@ func _process(delta: float) -> void:
 	var y = radius * sin(angle)
 	global_position = orbit_target.global_position + Vector2(x, y)
 	
-	# --- Trail Logic ---
-	if global_position != Vector2.ZERO:
-		line_2d.add_point(global_position)
-		if line_2d.get_point_count() > max_trail_length:
-			line_2d.remove_point(0)
+	# MOVEMENT TRAIL LOGIC (Independent from OrbitRing)
+	if movement_trail and global_position != Vector2.ZERO:
+		movement_trail.add_point(global_position)
+		if movement_trail.get_point_count() > max_trail_length:
+			movement_trail.remove_point(0)
+
+# --- SELECTION & OPACITY CONTROLS ---
+
+func select_planet() -> void:
+	get_tree().call_group("planets", "deselect_planet")
+	is_selected = true
+	set_ui_visible(true)
+	
+	# Highlight orbit line smoothly on selection
+	if orbit_ring:
+		create_tween().tween_property(orbit_ring, "modulate:a", HIGHLIGHT_ALPHA, 0.2)
+	
+	if gizmo_handle:
+		print("Attaching gizmo handle to: ", name)
+		gizmo_handle.attach_to_planet(self)
+		
+	planet_selected.emit(self)
+
+func deselect_planet() -> void:
+	print("PLANET: deselect_planet() was triggered on ", object_name)
+	is_selected = false
+	set_ui_visible(false)
+	
+	# Fade orbit line back down to low transparency
+	if orbit_ring:
+		create_tween().tween_property(orbit_ring, "modulate:a", DIM_ALPHA, 0.2)
+		
+	if gizmo_handle:
+		gizmo_handle.detach()
+		
+	planet_deselected.emit()
+
+# --- ORBIT RING GEOMETRY ---
+
+func draw_orbit_ring() -> void:
+	if not orbit_ring or not orbit_target:
+		return
+		
+	orbit_ring.clear_points()
+	
+	# Build static 360-degree closed ring path
+	var steps = 100
+	for i in range(steps + 1):
+		var theta = (i / float(steps)) * TAU
+		
+		var e_squared = eccentricity * eccentricity
+		var numerator = semi_major_axis * (1.0 - e_squared)
+		var denominator = 1.0 + (eccentricity * cos(theta))
+		var r = numerator / denominator
+		
+		var pt_x = r * cos(theta)
+		var pt_y = r * sin(theta)
+		
+		orbit_ring.add_point(orbit_target.global_position + Vector2(pt_x, pt_y))
+
+func _on_orbit_resized_by_gizmo(new_a: float) -> void:
+	# Ignore resize signals if THIS planet isn't the active selected one
+	if not is_selected:
+		return
+		
+	semi_major_axis = new_a # Setter triggers draw_orbit_ring() automatically
+
+# --- HABITABILITY & INPUTS ---
 
 # Mathematically checks if the entire elliptical orbit resides in the Goldilocks zone
 func check_orbit_habitability() -> void:
@@ -148,33 +224,22 @@ func check_orbit_habitability() -> void:
 			else:
 				habitability_label.text = "Orbit Status: UNINHABITABLE"
 				habitability_label.add_theme_color_override("font_color", Color.RED)
-	else:
-		if habitability_label:
-			habitability_label.text = "Orbiting Non-Star Target"
-			habitability_label.add_theme_color_override("font_color", Color.GRAY)
-
-# --- CLICK & UI LOGIC ---
 
 func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		get_viewport().set_input_as_handled()
 		select_planet()
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		deselect_planet()
-
-func select_planet() -> void:
-	get_tree().call_group("planets", "deselect_planet")
-	set_ui_visible(true)
-	planet_selected.emit(self)
-
-func deselect_planet() -> void:
-	set_ui_visible(false)
-	planet_deselected.emit()
+#func _unhandled_input(event: InputEvent) -> void:
+	#if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		# If the gizmo handle is currently being dragged, DO NOT DESELECT
+		#if gizmo_handle and gizmo_handle.is_dragging:
+		#	return
+			
+		#pass #deselect_planet()
 
 func set_ui_visible(visible_state: bool) -> void:
-	is_selected = visible_state
+	queue_redraw()
 	if speed_label:
 		speed_label.visible = visible_state
 	if habitability_label:

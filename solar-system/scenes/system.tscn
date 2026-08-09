@@ -4,12 +4,14 @@
 [ext_resource type="Script" uid="uid://b8axq2rofaoy8" path="res://scripts/MainSystem.gd" id="1_licsr"]
 [ext_resource type="PackedScene" uid="uid://cney8m3ajtl6a" path="res://scenes/star.tscn" id="2_0i2li"]
 [ext_resource type="PackedScene" uid="uid://b1j8yb7pbjslp" path="res://scenes/moon.tscn" id="3_rec6r"]
+[ext_resource type="PackedScene" uid="uid://bclyg41sot6jm" path="res://scenes/GizmoHandle.tscn" id="5_qm6kw"]
 
-[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button")]
+[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle")]
 script = ExtResource("1_licsr")
 camera = NodePath("Camera2D")
 terraform_button = NodePath("CanvasLayer/SelectionPanel/TerraformButton")
 orbit_button = NodePath("CanvasLayer/SelectionPanel/OrbitButton")
+gizmo_handle = NodePath("GizmoHandle")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=923855365]
 
@@ -21,8 +23,9 @@ orbit_button = NodePath("CanvasLayer/SelectionPanel/OrbitButton")
 
 [node name="Planet" parent="SystemMap/EarthOrbit" unique_id=1024953742 instance=ExtResource("1_68j0k")]
 
-[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet" index="1" unique_id=1389764719 node_paths=PackedStringArray("orbit_target", "speed_label", "habitability_label")]
+[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet" index="1" unique_id=1389764719 node_paths=PackedStringArray("gizmo_handle", "orbit_target", "speed_label", "habitability_label")]
 object_name = "Earth"
+gizmo_handle = NodePath("../../../../GizmoHandle")
 orbit_target = NodePath("../../../Star/AnimatableBody2D")
 speed_label = NodePath("../CanvasLayer/Label")
 habitability_label = NodePath("../CanvasLayer/Label2")
@@ -41,10 +44,11 @@ habitability_label = NodePath("../CanvasLayer/Label2")
 
 [node name="Planet2" parent="SystemMap/MarsOrbit" unique_id=1294353069 instance=ExtResource("1_68j0k")]
 
-[node name="AnimatableBody2D" parent="SystemMap/MarsOrbit/Planet2" index="1" unique_id=1389764719 node_paths=PackedStringArray("orbit_target", "speed_label", "habitability_label")]
+[node name="AnimatableBody2D" parent="SystemMap/MarsOrbit/Planet2" index="1" unique_id=1389764719 node_paths=PackedStringArray("gizmo_handle", "orbit_target", "speed_label", "habitability_label")]
 object_name = "Mars"
 semi_major_axis = 100.0
 eccentricity = 0.5
+gizmo_handle = NodePath("../../../../GizmoHandle")
 orbit_target = NodePath("../../../Star/AnimatableBody2D")
 speed_label = NodePath("../CanvasLayer/Label")
 habitability_label = NodePath("../CanvasLayer/Label2")
@@ -67,7 +71,17 @@ offset_right = 228.0
 offset_bottom = 614.0
 text = "Back to orbit"
 
+[node name="DeselectButton" type="Button" parent="CanvasLayer/SelectionPanel" unique_id=1665794565]
+visible = false
+offset_left = 371.0
+offset_top = 410.0
+offset_right = 389.0
+offset_bottom = 441.0
+text = "X"
+
 [node name="TerraformingHUD" type="CanvasLayer" parent="CanvasLayer" unique_id=784360361]
+
+[node name="GizmoHandle" parent="." unique_id=1335083992 instance=ExtResource("5_qm6kw")]
 
 [editable path="SystemMap/EarthOrbit/Planet"]
 [editable path="SystemMap/EarthOrbit/Planet/AnimatableBody2D/Moon"]

@@ -4,6 +4,8 @@ extends Node2D
 @export var camera: Camera2D
 @export var terraform_button: Button
 @export var orbit_button: Button
+@export var gizmo_handle: OrbitGizmoHandle
+var can_deselect: bool = true
 
 var selected_planet: Node2D = null
 
@@ -26,6 +28,11 @@ var terraform_zoom: Vector2 = Vector2(4.0, 4.0)
 var default_camera_position: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
+	
+	if gizmo_handle:
+		gizmo_handle.gizmo_interaction_started.connect(_on_gizmo_interaction_started)
+		gizmo_handle.gizmo_interaction_ended.connect(_on_gizmo_interaction_ended)
+	
 	if camera:
 		default_camera_position = camera.global_position
 		
@@ -39,6 +46,12 @@ func _ready() -> void:
 		
 	# Connect planet signals
 	call_deferred("connect_planet_signals")
+	
+func _on_gizmo_interaction_started() -> void:
+	can_deselect = false
+
+func _on_gizmo_interaction_ended() -> void:
+	can_deselect = true
 
 func connect_planet_signals() -> void:
 	for planet in get_tree().get_nodes_in_group("planets"):
@@ -87,6 +100,16 @@ func _on_orbit_button_pressed() -> void:
 	
 	reset_camera_zoom()
 	print("Switched to orbit view")
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		
+		if not can_deselect:
+			print("SYSTEM MANAGER: Click ignored! Gizmo is being interacted with.")
+			return
+			
+		print("SYSTEM MANAGER: Deselecting planets because empty space was clicked.")
+		get_tree().call_group("planets", "deselect_planet")
 
 func reset_camera_zoom() -> void:
 	if not camera:

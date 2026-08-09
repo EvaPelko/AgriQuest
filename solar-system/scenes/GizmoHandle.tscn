@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bclyg41sot6jm"]
+
+[ext_resource type="Script" uid="uid://cirkukmnxbpkg" path="res://scripts/GizmoHandle.gd" id="1_4gfaf"]
+[ext_resource type="Texture2D" uid="uid://dtr4cg30v5855" path="res://icon.svg" id="2_1i1j0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pyfwd"]
+radius = 26.019224
+
+[node name="GizmoHandle" type="Area2D" unique_id=1335083992]
+script = ExtResource("1_4gfaf")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=826932877]
+scale = Vector2(0.1328125, 0.1328125)
+texture = ExtResource("2_1i1j0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1157512280]
+shape = SubResource("CircleShape2D_pyfwd")
+debug_color = Color(0.89905006, 4.6301782e-05, 0.6680371, 1)
