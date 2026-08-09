@@ -7,6 +7,11 @@ extends Node2D
 @export var gizmo_handle: OrbitGizmoHandle
 var can_deselect: bool = true
 
+@export_group("UI Controls")
+@export var planet_info_panel: PanelContainer
+@export var eccentricity_slider: HSlider
+@export var eccentricity_label: Label
+
 var selected_planet: Node2D = null
 
 var is_in_terraforming_mode: bool = false:
@@ -21,7 +26,11 @@ var is_in_terraforming_mode: bool = false:
 			# Hide terraform button when in terraforming mode, 
 			# or show it if we are back in system view AND a planet is selected
 			terraform_button.visible = (not is_in_terraforming_mode) and (selected_planet != null)
-
+		
+		# Hide the right side panel during terraforming mode
+		if planet_info_panel:
+			planet_info_panel.visible = (not is_in_terraforming_mode) and (selected_planet != null)
+			
 # Default camera zoom levels
 var system_zoom: Vector2 = Vector2(1.0, 1.0)
 var terraform_zoom: Vector2 = Vector2(4.0, 4.0)
@@ -43,6 +52,12 @@ func _ready() -> void:
 	if orbit_button:
 		orbit_button.visible = false
 		orbit_button.pressed.connect(_on_orbit_button_pressed)
+	
+	if planet_info_panel:
+		planet_info_panel.visible = false
+		
+	if eccentricity_slider:
+		eccentricity_slider.value_changed.connect(_on_eccentricity_slider_changed)
 		
 	# Connect planet signals
 	call_deferred("connect_planet_signals")
@@ -73,6 +88,14 @@ func on_planet_selected(planet: Node2D) -> void:
 	if terraform_button and not is_in_terraforming_mode:
 		terraform_button.visible = true
 		terraform_button.text = "Terraform " + planet.object_name
+	
+	if planet_info_panel and not is_in_terraforming_mode:
+		planet_info_panel.visible = true
+		
+	# Populate slider with current planet's eccentricity value
+	if eccentricity_slider and "eccentricity" in planet:
+		eccentricity_slider.set_value_no_signal(planet.eccentricity)
+		_update_eccentricity_label(planet.eccentricity)
 
 func on_planet_deselected() -> void:
 	if not is_in_terraforming_mode:
@@ -80,9 +103,25 @@ func on_planet_deselected() -> void:
 		if terraform_button:
 			terraform_button.visible = false
 		reset_camera_zoom()
-
+	
+	if planet_info_panel:
+		planet_info_panel.visible = false
+		
 # --- BUTTON ACTIONS ---
 
+func _on_eccentricity_slider_changed(value: float) -> void:
+	if selected_planet and "eccentricity" in selected_planet:
+		selected_planet.eccentricity = value
+		_update_eccentricity_label(value)
+		
+		# Position gizmo handle at the new apoapsis point!
+		if gizmo_handle:
+			gizmo_handle.update_position()
+
+func _update_eccentricity_label(val: float) -> void:
+	if eccentricity_label:
+		eccentricity_label.text = "Eccentricity: %.2f" % val
+		
 func _on_terraform_button_pressed() -> void:
 	if not selected_planet:
 		return
