@@ -9,17 +9,17 @@ extends AnimatableBody2D
 			name_label.text = object_name
 
 @export_category("Orbit Configuration")
-@export var semi_major_axis: float = 160.0: # Size of the orbit
+@export var semi_major_axis: float = 160.0: # Size of the orbit (Controlled by Slider)
 	set(value):
-		semi_major_axis = max(20.0, value)
-		check_orbit_habitability()
+		semi_major_axis = max(30.0, value)
 		draw_orbit_ring()
+		check_orbit_habitability()
 
-@export var eccentricity: float = 0.05: # Oval shape (0 = perfect circle, 0.9 = flat oval)
+@export var eccentricity: float = 0.05: # Oval shape (Controlled by Gizmo) (0 = perfect circle, 0.9 = flat oval)
 	set(value):
 		eccentricity = clamp(value, 0.0, 0.85)
-		check_orbit_habitability()
 		draw_orbit_ring()
+		check_orbit_habitability()
 
 @export var max_trail_length: int = 200
 
@@ -64,11 +64,11 @@ func _ready() -> void:
 	
 	set_ui_visible(false)
 	
+	# Connect to eccentricity signal instead of resize signal
 	if gizmo_handle:
-		gizmo_handle.orbit_resized.connect(_on_orbit_resized_by_gizmo)
+		gizmo_handle.eccentricity_changed.connect(_on_eccentricity_changed_by_gizmo)
 	
-	# wait until the scene tree is 100% finished loading 
-	# before running orbit target search
+	# Wait until the scene tree is finished loading before setting up targets
 	call_deferred("setup_orbit_target")
 
 func setup_orbit_target() -> void:
@@ -138,7 +138,7 @@ func _process(delta: float) -> void:
 	var y = radius * sin(angle)
 	global_position = orbit_target.global_position + Vector2(x, y)
 	
-	# MOVEMENT TRAIL LOGIC (Independent from OrbitRing)
+	# MOVEMENT TRAIL LOGIC
 	if movement_trail and global_position != Vector2.ZERO:
 		movement_trail.add_point(global_position)
 		if movement_trail.get_point_count() > max_trail_length:
@@ -198,12 +198,14 @@ func draw_orbit_ring() -> void:
 		
 		orbit_ring.add_point(orbit_target.global_position + Vector2(pt_x, pt_y))
 
-func _on_orbit_resized_by_gizmo(new_a: float) -> void:
+# --- GIZMO CALLBACK ---
+
+func _on_eccentricity_changed_by_gizmo(new_e: float) -> void:
 	# Ignore resize signals if THIS planet isn't the active selected one
 	if not is_selected:
 		return
 		
-	semi_major_axis = new_a # Setter triggers draw_orbit_ring() automatically
+	eccentricity = new_e # Setter triggers draw_orbit_ring() & check_orbit_habitability()
 
 # --- HABITABILITY & INPUTS ---
 
@@ -229,14 +231,6 @@ func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> vo
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		get_viewport().set_input_as_handled()
 		select_planet()
-
-#func _unhandled_input(event: InputEvent) -> void:
-	#if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		# If the gizmo handle is currently being dragged, DO NOT DESELECT
-		#if gizmo_handle and gizmo_handle.is_dragging:
-		#	return
-			
-		#pass #deselect_planet()
 
 func set_ui_visible(visible_state: bool) -> void:
 	queue_redraw()

@@ -9,8 +9,8 @@ var can_deselect: bool = true
 
 @export_group("UI Controls")
 @export var planet_info_panel: PanelContainer
-@export var eccentricity_slider: HSlider
-@export var eccentricity_label: Label
+@export var orbit_size_slider: HSlider   # Formerly eccentricity_slider
+@export var orbit_size_label: Label     # Displays current orbit radius/a
 
 var selected_planet: Node2D = null
 
@@ -56,8 +56,15 @@ func _ready() -> void:
 	if planet_info_panel:
 		planet_info_panel.visible = false
 		
-	if eccentricity_slider:
-		eccentricity_slider.value_changed.connect(_on_eccentricity_slider_changed)
+	if orbit_size_slider:
+		# Set slider bounds for semi-major axis (e.g. 100 to 2000 pixels)
+		orbit_size_slider.min_value = 100.0
+		orbit_size_slider.max_value = 300.0
+		orbit_size_slider.step = 5.0
+		orbit_size_slider.value_changed.connect(_on_orbit_size_slider_changed)
+		
+	if gizmo_handle:
+		gizmo_handle.eccentricity_changed.connect(_on_gizmo_eccentricity_changed)
 		
 	# Connect planet signals
 	call_deferred("connect_planet_signals")
@@ -92,10 +99,10 @@ func on_planet_selected(planet: Node2D) -> void:
 	if planet_info_panel and not is_in_terraforming_mode:
 		planet_info_panel.visible = true
 		
-	# Populate slider with current planet's eccentricity value
-	if eccentricity_slider and "eccentricity" in planet:
-		eccentricity_slider.set_value_no_signal(planet.eccentricity)
-		_update_eccentricity_label(planet.eccentricity)
+	# Populate slider with planet's semi_major_axis
+	if orbit_size_slider and "semi_major_axis" in planet:
+		orbit_size_slider.set_value_no_signal(planet.semi_major_axis)
+		_update_size_label(planet.semi_major_axis)
 
 func on_planet_deselected() -> void:
 	if not is_in_terraforming_mode:
@@ -107,20 +114,26 @@ func on_planet_deselected() -> void:
 	if planet_info_panel:
 		planet_info_panel.visible = false
 		
-# --- BUTTON ACTIONS ---
+#--- SLIDER CALLBACK (Changes Orbit Size) ---
 
-func _on_eccentricity_slider_changed(value: float) -> void:
-	if selected_planet and "eccentricity" in selected_planet:
-		selected_planet.eccentricity = value
-		_update_eccentricity_label(value)
+func _on_orbit_size_slider_changed(value: float) -> void:
+	if selected_planet and "semi_major_axis" in selected_planet:
+		selected_planet.semi_major_axis = value
+		_update_size_label(value)
 		
-		# Position gizmo handle at the new apoapsis point!
+		# Reposition gizmo handle to match new orbit scale
 		if gizmo_handle:
 			gizmo_handle.update_position()
 
-func _update_eccentricity_label(val: float) -> void:
-	if eccentricity_label:
-		eccentricity_label.text = "Eccentricity: %.2f" % val
+# --- GIZMO CALLBACK (Changes Eccentricity) ---
+
+func _on_gizmo_eccentricity_changed(new_e: float) -> void:
+	if selected_planet and "eccentricity" in selected_planet:
+		selected_planet.eccentricity = new_e
+
+func _update_size_label(val: float) -> void:
+	if orbit_size_label:
+		orbit_size_label.text = "Orbit Size: %d AU" % int(val)
 		
 func _on_terraform_button_pressed() -> void:
 	if not selected_planet:
@@ -139,6 +152,9 @@ func _on_orbit_button_pressed() -> void:
 	
 	reset_camera_zoom()
 	print("Switched to orbit view")
+	
+	if planet_info_panel:
+		planet_info_panel.visible = false
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:

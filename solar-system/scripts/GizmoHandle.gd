@@ -2,7 +2,8 @@ class_name OrbitGizmoHandle
 extends Area2D
 
 # Emitted when dragging to inform the target planet of its new semi-major axis
-signal orbit_resized(new_semi_major_axis: float)
+#signal orbit_resized(new_semi_major_axis: float)
+signal eccentricity_changed(new_eccentricity: float)
 
 signal gizmo_interaction_started
 signal gizmo_interaction_ended   
@@ -86,19 +87,20 @@ func _process(_delta: float) -> void:
 		return
 		
 	if is_dragging:
-		# Drag handle to global mouse coordinates
 		var mouse_pos = get_global_mouse_position()
-		global_position = mouse_pos
-		
-		# Distance between mouse cursor and central target star/planet
 		var star_pos = target_planet.orbit_target.global_position
+		
+		# Current mouse distance from central star
 		var mouse_dist = star_pos.distance_to(mouse_pos)
+		var a = target_planet.semi_major_axis
 		
-		# Reverse Kepler formula: a = r_apoapsis / (1 + e)
-		var new_a = mouse_dist / (1.0 + target_planet.eccentricity)
+		# Derive eccentricity from distance: e = (dist / a) - 1.0
+		# Clamp between 0.0 (perfect circle) and 0.85 (highly elongated ellipse)
+		var new_e = clamp((mouse_dist / a) - 1.0, 0.0, 0.85)
 		
-		# Emit signal to inform planet script to update live
-		orbit_resized.emit(new_a)
+		# Constrain handle visually along the apoapsis axis (-X relative to star)
+		global_position = star_pos + Vector2(-a * (1.0 + new_e), 0)
+		
+		eccentricity_changed.emit(new_e)
 	else:
-		# Lock gizmo to Apoapsis point continuously
 		update_position()
