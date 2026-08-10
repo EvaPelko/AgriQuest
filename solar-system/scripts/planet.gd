@@ -36,6 +36,8 @@ extends AnimatableBody2D
 @export var speed_label: Label
 @export var habitability_label: Label
 
+var is_habitable: bool = false # Tracks if the orbit is in the Goldilocks zone
+
 signal planet_selected(planet_ref: Node2D)
 signal planet_deselected
 
@@ -217,7 +219,7 @@ func check_orbit_habitability() -> void:
 		# Formula for furthest point (apoapsis)
 		var apoapsis = semi_major_axis * (1.0 + eccentricity)
 		
-		var is_habitable = (periapsis >= star_node.goldilocks_min_radius) and (apoapsis <= star_node.goldilocks_max_radius)
+		is_habitable = (periapsis >= star_node.goldilocks_min_radius) and (apoapsis <= star_node.goldilocks_max_radius)
 		
 		if habitability_label:
 			if is_habitable:

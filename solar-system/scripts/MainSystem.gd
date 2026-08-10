@@ -95,6 +95,7 @@ func on_planet_selected(planet: Node2D) -> void:
 	if terraform_button and not is_in_terraforming_mode:
 		terraform_button.visible = true
 		terraform_button.text = "Terraform " + planet.object_name
+		_update_terraform_button_state()
 	
 	if planet_info_panel and not is_in_terraforming_mode:
 		planet_info_panel.visible = true
@@ -103,6 +104,15 @@ func on_planet_selected(planet: Node2D) -> void:
 	if orbit_size_slider and "semi_major_axis" in planet:
 		orbit_size_slider.set_value_no_signal(planet.semi_major_axis)
 		_update_size_label(planet.semi_major_axis)
+
+# Helper function to grey out / enable the terraform button dynamically
+func _update_terraform_button_state() -> void:
+	if terraform_button and selected_planet:
+		if "is_habitable" in selected_planet:
+			# Button is disabled (greyed out) if NOT habitable
+			terraform_button.disabled = not selected_planet.is_habitable
+		else:
+			terraform_button.disabled = false
 
 func on_planet_deselected() -> void:
 	if not is_in_terraforming_mode:
@@ -120,6 +130,7 @@ func _on_orbit_size_slider_changed(value: float) -> void:
 	if selected_planet and "semi_major_axis" in selected_planet:
 		selected_planet.semi_major_axis = value
 		_update_size_label(value)
+		_update_terraform_button_state()
 		
 		# Reposition gizmo handle to match new orbit scale
 		if gizmo_handle:
@@ -130,6 +141,7 @@ func _on_orbit_size_slider_changed(value: float) -> void:
 func _on_gizmo_eccentricity_changed(new_e: float) -> void:
 	if selected_planet and "eccentricity" in selected_planet:
 		selected_planet.eccentricity = new_e
+		_update_terraform_button_state()
 
 func _update_size_label(val: float) -> void:
 	if orbit_size_label:
