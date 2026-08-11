@@ -1,9 +1,11 @@
 [gd_scene format=3 uid="uid://1wcw3qfnn46l"]
 
-[ext_resource type="PackedScene" uid="uid://b404xmkuduyj5" path="res://scenes/planet.tscn" id="1_68j0k"]
+[ext_resource type="PackedScene" uid="uid://b404xmkuduyj5" path="res://scenes/OrbitalBody.tscn" id="1_68j0k"]
 [ext_resource type="Script" uid="uid://b8axq2rofaoy8" path="res://scripts/MainSystem.gd" id="1_licsr"]
 [ext_resource type="PackedScene" uid="uid://cney8m3ajtl6a" path="res://scenes/star.tscn" id="2_0i2li"]
+[ext_resource type="PackedScene" uid="uid://clqvlybt45o7r" path="res://pixel_planets/Star/Star.tscn" id="3_3igp5"]
 [ext_resource type="PackedScene" uid="uid://b1j8yb7pbjslp" path="res://scenes/moon.tscn" id="3_rec6r"]
+[ext_resource type="PackedScene" uid="uid://crdxh2i35dorc" path="res://pixel_planets/Rivers/Rivers.tscn" id="5_7re7h"]
 [ext_resource type="PackedScene" uid="uid://bclyg41sot6jm" path="res://scenes/GizmoHandle.tscn" id="5_qm6kw"]
 
 [node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "planet_info_panel", "orbit_size_slider", "orbit_size_label")]
@@ -22,26 +24,39 @@ orbit_size_label = NodePath("CanvasLayer/PlanetInfoPanel/VBoxContainer/OrbitLabe
 
 [node name="Star" parent="SystemMap" unique_id=205101820 instance=ExtResource("2_0i2li")]
 
+[node name="Star" parent="SystemMap/Star/AnimatableBody2D" parent_id_path=PackedInt32Array(205101820, 1389764719) index="2" unique_id=2111435653 instance=ExtResource("3_3igp5")]
+offset_left = -49.0
+offset_top = -52.0
+offset_right = -49.0
+offset_bottom = -52.0
+
 [node name="EarthOrbit" type="Node2D" parent="SystemMap" unique_id=362061960]
 
-[node name="Planet" parent="SystemMap/EarthOrbit" unique_id=1024953742 instance=ExtResource("1_68j0k")]
+[node name="Planet1" parent="SystemMap/EarthOrbit" unique_id=1024953742 instance=ExtResource("1_68j0k")]
 
-[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet" index="1" unique_id=1389764719 node_paths=PackedStringArray("gizmo_handle", "orbit_target", "speed_label", "habitability_label")]
+[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet1" index="1" unique_id=1389764719 node_paths=PackedStringArray("gizmo_handle", "orbit_target", "speed_label", "habitability_label")]
 object_name = "Earth"
 gizmo_handle = NodePath("../../../../GizmoHandle")
 orbit_target = NodePath("../../../Star/AnimatableBody2D")
 speed_label = NodePath("../CanvasLayer/Label")
 habitability_label = NodePath("../CanvasLayer/Label2")
 
-[node name="Moon" parent="SystemMap/EarthOrbit/Planet/AnimatableBody2D" index="3" unique_id=931381539 instance=ExtResource("3_rec6r")]
+[node name="Moon" parent="SystemMap/EarthOrbit/Planet1/AnimatableBody2D" index="3" unique_id=931381539 instance=ExtResource("3_rec6r")]
 
-[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet/AnimatableBody2D/Moon" index="1" unique_id=1389764719 node_paths=PackedStringArray("orbit_target", "speed_label", "habitability_label")]
+[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet1/AnimatableBody2D/Moon" index="1" unique_id=1389764719 node_paths=PackedStringArray("orbit_target", "speed_label", "habitability_label")]
 object_name = "Moon name"
 semi_major_axis = 30.0
 max_trail_length = 20
 orbit_target = NodePath("../..")
 speed_label = NodePath("../CanvasLayer/Label")
 habitability_label = NodePath("../CanvasLayer/Label2")
+
+[node name="Control" parent="SystemMap/EarthOrbit/Planet1/AnimatableBody2D" index="5" unique_id=1948388815 instance=ExtResource("5_7re7h")]
+offset_left = -49.0
+offset_top = -51.0
+offset_right = -49.0
+offset_bottom = -51.0
+gui_zoom = 0.5
 
 [node name="MarsOrbit" type="Node2D" parent="SystemMap" unique_id=1604189839]
 
@@ -104,6 +119,7 @@ step = 0.01
 
 [node name="GizmoHandle" parent="." unique_id=1335083992 instance=ExtResource("5_qm6kw")]
 
-[editable path="SystemMap/EarthOrbit/Planet"]
-[editable path="SystemMap/EarthOrbit/Planet/AnimatableBody2D/Moon"]
+[editable path="SystemMap/Star"]
+[editable path="SystemMap/EarthOrbit/Planet1"]
+[editable path="SystemMap/EarthOrbit/Planet1/AnimatableBody2D/Moon"]
 [editable path="SystemMap/MarsOrbit/Planet2"]
