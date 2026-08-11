@@ -34,8 +34,9 @@ offset_bottom = -52.0
 
 [node name="Planet1" parent="SystemMap/EarthOrbit" unique_id=1024953742 instance=ExtResource("1_68j0k")]
 
-[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet1" index="1" unique_id=1389764719 node_paths=PackedStringArray("gizmo_handle", "orbit_target", "speed_label", "habitability_label")]
+[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet1" index="1" unique_id=1389764719 node_paths=PackedStringArray("rivers", "gizmo_handle", "orbit_target", "speed_label", "habitability_label")]
 object_name = "Earth"
+rivers = NodePath("Control")
 gizmo_handle = NodePath("../../../../GizmoHandle")
 orbit_target = NodePath("../../../Star/AnimatableBody2D")
 speed_label = NodePath("../CanvasLayer/Label")
@@ -52,11 +53,15 @@ speed_label = NodePath("../CanvasLayer/Label")
 habitability_label = NodePath("../CanvasLayer/Label2")
 
 [node name="Control" parent="SystemMap/EarthOrbit/Planet1/AnimatableBody2D" index="5" unique_id=1948388815 instance=ExtResource("5_7re7h")]
-offset_left = -49.0
-offset_top = -51.0
-offset_right = -49.0
-offset_bottom = -51.0
-gui_zoom = 0.5
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = -15.0
+offset_top = -15.0
+offset_right = -15.0
+offset_bottom = -15.0
+grow_horizontal = 1
+grow_vertical = 1
 
 [node name="MarsOrbit" type="Node2D" parent="SystemMap" unique_id=1604189839]
 

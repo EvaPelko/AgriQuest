@@ -23,7 +23,7 @@ extends AnimatableBody2D
 
 @export var max_trail_length: int = 200
 
-#@export var rivers = Control
+@export var rivers: Control
 
 @export_category("Gizmo Setup")
 @export var gizmo_handle: OrbitGizmoHandle
@@ -76,8 +76,8 @@ func _ready() -> void:
 	call_deferred("setup_orbit_target")
 	
 	# Scale it to 50% size on both axes
-	#if rivers:
-	#	rivers.scale = Vector2(0.5, 0.5)
+	if rivers:
+		rivers.scale = Vector2(0.3, 0.3)
 
 func setup_orbit_target() -> void:
 	# 1. If an explicit target was assigned in Inspector (e.g. Moon -> Planet)

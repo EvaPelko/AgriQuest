@@ -47,6 +47,7 @@ offset_right = -412.0
 offset_bottom = -200.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("3")
 
 [node name="Land" type="ColorRect" parent="." unique_id=82869765]
@@ -60,3 +61,4 @@ material = SubResource("2")
 layout_mode = 0
 offset_right = 100.0
 offset_bottom = 100.0
+mouse_filter = 1
