@@ -17,7 +17,7 @@ extends AnimatableBody2D
 
 @export var eccentricity: float = 0.05: # Oval shape (Controlled by Gizmo) (0 = perfect circle, 0.9 = flat oval)
 	set(value):
-		eccentricity = clamp(value, 0.0, 0.85)
+		eccentricity = clamp(value, 0.0, 0.70)
 		draw_orbit_ring()
 		check_orbit_habitability()
 
@@ -205,6 +205,12 @@ func draw_orbit_ring() -> void:
 		var pt_y = r * sin(theta)
 		
 		orbit_ring.add_point(orbit_target.global_position + Vector2(pt_x, pt_y))
+
+# --- COLORS ---
+
+func shift_color(hue_offset: float) -> void:
+	if rivers and rivers.has_method("shift_planet_hue"):
+		rivers.shift_planet_hue(hue_offset)
 
 # --- GIZMO CALLBACK ---
 

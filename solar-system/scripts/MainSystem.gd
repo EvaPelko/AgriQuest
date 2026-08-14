@@ -11,6 +11,10 @@ var can_deselect: bool = true
 @export var planet_info_panel: PanelContainer
 @export var orbit_size_slider: HSlider   # Formerly eccentricity_slider
 @export var orbit_size_label: Label     # Displays current orbit radius/a
+@export var terraforming_panel: PanelContainer
+@export var color_slider: HSlider
+@export var color_label: Label
+
 
 var selected_planet: Node2D = null
 
@@ -30,6 +34,10 @@ var is_in_terraforming_mode: bool = false:
 		# Hide the right side panel during terraforming mode
 		if planet_info_panel:
 			planet_info_panel.visible = (not is_in_terraforming_mode) and (selected_planet != null)
+			
+		if terraforming_panel:
+			terraforming_panel.visible = (is_in_terraforming_mode)
+			
 			
 # Default camera zoom levels
 var system_zoom: Vector2 = Vector2(1.0, 1.0)
@@ -55,6 +63,9 @@ func _ready() -> void:
 	
 	if planet_info_panel:
 		planet_info_panel.visible = false
+	
+	if terraforming_panel:
+		terraforming_panel.visible = false
 		
 	if orbit_size_slider:
 		# Set slider bounds for semi-major axis (e.g. 100 to 2000 pixels)
@@ -68,6 +79,17 @@ func _ready() -> void:
 		
 	# Connect planet signals
 	call_deferred("connect_planet_signals")
+	
+	# Setup and connect color slider
+	if color_slider:
+		color_slider.min_value = 0.0
+		color_slider.max_value = 1.0
+		color_slider.step = 0.01
+		color_slider.value_changed.connect(_on_color_slider_value_changed)
+	
+func _on_color_slider_value_changed(value: float) -> void:
+	if selected_planet and selected_planet.has_method("shift_color"):
+		selected_planet.shift_color(value)
 	
 func _on_gizmo_interaction_started() -> void:
 	can_deselect = false

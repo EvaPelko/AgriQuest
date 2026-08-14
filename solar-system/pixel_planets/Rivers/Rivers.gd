@@ -1,5 +1,36 @@
 extends "res://pixel_planets/Planet.gd"
 
+# Store base colors so we can shift them relative to their original hue
+var base_land_colors: Array = []
+var base_river_colors: Array = []
+var base_cloud_colors: Array = []
+
+func _ready():
+	# Store initial base colors on start
+	_save_base_colors()
+
+func _save_base_colors():
+	var current = get_colors()
+	base_land_colors = current.slice(0, 4)
+	base_river_colors = current.slice(4, 6)
+	base_cloud_colors = current.slice(6, 10)
+
+# Shift all colors along the HSV hue spectrum by hue_offset (0.0 to 1.0)
+func shift_planet_hue(hue_offset: float) -> void:
+	var shifted_land = _shift_color_array(base_land_colors, hue_offset)
+	var shifted_rivers = _shift_color_array(base_river_colors, hue_offset)
+	var shifted_clouds = _shift_color_array(base_cloud_colors, hue_offset)
+
+	set_colors(shifted_land + shifted_rivers + shifted_clouds)
+
+func _shift_color_array(color_array: Array, hue_offset: float) -> Array:
+	var new_colors = []
+	for col in color_array:
+		# Shift hue and wrap around using fmod so it stays within [0.0, 1.0]
+		var new_h = fmod(col.h + hue_offset, 1.0)
+		new_colors.append(Color.from_hsv(new_h, col.s, col.v, col.a))
+	return new_colors
+
 func set_pixels(amount):
 	$Land.material.set_shader_parameter("pixels", amount)
 	$Cloud.material.set_shader_parameter("pixels", amount)
