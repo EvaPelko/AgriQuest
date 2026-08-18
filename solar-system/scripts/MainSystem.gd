@@ -126,6 +126,9 @@ func on_planet_selected(planet: Node2D) -> void:
 	if orbit_size_slider and "semi_major_axis" in planet:
 		orbit_size_slider.set_value_no_signal(planet.semi_major_axis)
 		_update_size_label(planet.semi_major_axis)
+	
+	if color_slider and planet.has_method("get_current_hue"):
+		color_slider.set_value_no_signal(planet.get_current_hue())
 
 # Helper function to grey out / enable the terraform button dynamically
 func _update_terraform_button_state() -> void:

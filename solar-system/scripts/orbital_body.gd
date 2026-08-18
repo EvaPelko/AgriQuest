@@ -212,6 +212,11 @@ func shift_color(hue_offset: float) -> void:
 	if rivers and rivers.has_method("shift_planet_hue"):
 		rivers.shift_planet_hue(hue_offset)
 
+func get_current_hue() -> float:
+	if rivers and "current_hue_offset" in rivers:
+		return rivers.current_hue_offset
+	return 0.0
+
 # --- GIZMO CALLBACK ---
 
 func _on_eccentricity_changed_by_gizmo(new_e: float) -> void:

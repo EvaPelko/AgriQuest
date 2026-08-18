@@ -5,6 +5,8 @@ var base_land_colors: Array = []
 var base_river_colors: Array = []
 var base_cloud_colors: Array = []
 
+var current_hue_offset: float = 0.0
+
 func _ready():
 	# Store initial base colors on start
 	_save_base_colors()
@@ -17,6 +19,7 @@ func _save_base_colors():
 
 # Shift all colors along the HSV hue spectrum by hue_offset (0.0 to 1.0)
 func shift_planet_hue(hue_offset: float) -> void:
+	current_hue_offset = hue_offset
 	var shifted_land = _shift_color_array(base_land_colors, hue_offset)
 	var shifted_rivers = _shift_color_array(base_river_colors, hue_offset)
 	var shifted_clouds = _shift_color_array(base_cloud_colors, hue_offset)
