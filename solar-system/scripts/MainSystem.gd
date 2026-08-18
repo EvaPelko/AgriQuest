@@ -12,9 +12,12 @@ var can_deselect: bool = true
 @export var orbit_size_slider: HSlider   # Formerly eccentricity_slider
 @export var orbit_size_label: Label     # Displays current orbit radius/a
 @export var terraforming_panel: PanelContainer
-@export var color_slider: HSlider
-@export var color_label: Label
-
+@export var land_color_slider: HSlider
+@export var land_color_label: Label
+@export var rivers_color_slider: HSlider
+@export var rivers_color_label: Label
+@export var cloud_color_slider: HSlider
+@export var cloud_color_label: Label
 
 var selected_planet: Node2D = null
 
@@ -81,16 +84,30 @@ func _ready() -> void:
 	call_deferred("connect_planet_signals")
 	
 	# Setup and connect color slider
-	if color_slider:
-		color_slider.min_value = 0.0
-		color_slider.max_value = 1.0
-		color_slider.step = 0.01
-		color_slider.value_changed.connect(_on_color_slider_value_changed)
+	if land_color_slider:
+		land_color_slider.min_value = 0.0
+		land_color_slider.max_value = 1.0
+		land_color_slider.step = 0.01
+		land_color_slider.value_changed.connect(_on_land_color_slider_value_changed)
 	
-func _on_color_slider_value_changed(value: float) -> void:
-	if selected_planet and selected_planet.has_method("shift_color"):
-		selected_planet.shift_color(value)
+	if rivers_color_slider:
+		rivers_color_slider.value_changed.connect(_on_rivers_color_slider_value_changed)
 	
+	if cloud_color_slider:
+		cloud_color_slider.value_changed.connect(_on_cloud_color_slider_value_changed)
+	
+func _on_land_color_slider_value_changed(value: float) -> void:
+	if selected_planet and selected_planet.has_method("shift_land_color"):
+		selected_planet.shift_land_color(value)
+
+func _on_rivers_color_slider_value_changed(value: float) -> void:
+	if selected_planet and selected_planet.has_method("shift_rivers_color"):
+		selected_planet.shift_rivers_color(value)
+
+func _on_cloud_color_slider_value_changed(value: float) -> void:
+	if selected_planet and selected_planet.has_method("shift_cloud_color"):
+		selected_planet.shift_cloud_color(value)
+
 func _on_gizmo_interaction_started() -> void:
 	can_deselect = false
 
@@ -127,8 +144,14 @@ func on_planet_selected(planet: Node2D) -> void:
 		orbit_size_slider.set_value_no_signal(planet.semi_major_axis)
 		_update_size_label(planet.semi_major_axis)
 	
-	if color_slider and planet.has_method("get_current_hue"):
-		color_slider.set_value_no_signal(planet.get_current_hue())
+	if land_color_slider and planet.has_method("get_land_hue"):
+		land_color_slider.set_value_no_signal(planet.get_land_hue())
+	
+	if rivers_color_slider and planet.has_method("get_river_hue"):
+		rivers_color_slider.set_value_no_signal(planet.get_river_hue())
+	
+	if cloud_color_slider and planet.has_method("get_cloud_hue"):
+		cloud_color_slider.set_value_no_signal(planet.get_cloud_hue())
 
 # Helper function to grey out / enable the terraform button dynamically
 func _update_terraform_button_state() -> void:

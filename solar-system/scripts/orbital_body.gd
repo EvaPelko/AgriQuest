@@ -208,13 +208,36 @@ func draw_orbit_ring() -> void:
 
 # --- COLORS ---
 
-func shift_color(hue_offset: float) -> void:
-	if rivers and rivers.has_method("shift_planet_hue"):
-		rivers.shift_planet_hue(hue_offset)
+func shift_land_color(hue_offset: float) -> void:
+	if rivers and rivers.has_method("shift_planet_land_hue"):
+		rivers.shift_planet_land_hue(hue_offset)
+
+func shift_rivers_color(hue_offset: float) -> void:
+	if rivers and rivers.has_method("shift_planet_rivers_hue"):
+		rivers.shift_planet_rivers_hue(hue_offset)
+
+func shift_cloud_color(hue_offset: float) -> void:
+	if rivers and rivers.has_method("shift_planet_cloud_hue"):
+		rivers.shift_planet_cloud_hue(hue_offset)
 
 func get_current_hue() -> float:
 	if rivers and "current_hue_offset" in rivers:
 		return rivers.current_hue_offset
+	return 0.0
+
+func get_land_hue() -> float:
+	if rivers and rivers.has_method("get_land_hue"):
+		return rivers.get_land_hue()
+	return 0.0
+
+func get_river_hue() -> float:
+	if rivers and rivers.has_method("get_river_hue"):
+		return rivers.get_river_hue()
+	return 0.0
+
+func get_cloud_hue() -> float:
+	if rivers and rivers.has_method("get_cloud_hue"):
+		return rivers.get_cloud_hue()
 	return 0.0
 
 # --- GIZMO CALLBACK ---

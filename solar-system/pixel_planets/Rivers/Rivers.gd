@@ -6,6 +6,9 @@ var base_river_colors: Array = []
 var base_cloud_colors: Array = []
 
 var current_hue_offset: float = 0.0
+var land_hue_offset: float = 0.0
+var river_hue_offset: float = 0.0
+var cloud_hue_offset: float = 0.0
 
 func _ready():
 	# Store initial base colors on start
@@ -26,12 +29,65 @@ func shift_planet_hue(hue_offset: float) -> void:
 
 	set_colors(shifted_land + shifted_rivers + shifted_clouds)
 
+func shift_planet_land_hue(hue_offset: float) -> void:
+	land_hue_offset = hue_offset
+	_update_hues()
+
+func shift_planet_rivers_hue(hue_offset: float) -> void:
+	river_hue_offset = hue_offset
+	_update_hues()
+
+func shift_planet_cloud_hue(hue_offset: float) -> void:
+	cloud_hue_offset = hue_offset
+	_update_hues()
+
+func _update_hues() -> void:
+	var shifted_land = _shift_color_array(
+		base_land_colors,
+		land_hue_offset
+	)
+
+	var shifted_rivers = _shift_color_array(
+		base_river_colors,
+		river_hue_offset
+	)
+
+	var shifted_clouds = _shift_color_array(
+		base_cloud_colors,
+		cloud_hue_offset
+	)
+
+	set_colors(shifted_land + shifted_rivers + shifted_clouds)
+
+func get_land_hue() -> float:
+	return land_hue_offset
+
+
+func get_river_hue() -> float:
+	return river_hue_offset
+
+
+func get_cloud_hue() -> float:
+	return cloud_hue_offset
+
 func _shift_color_array(color_array: Array, hue_offset: float) -> Array:
 	var new_colors = []
+
 	for col in color_array:
-		# Shift hue and wrap around using fmod so it stays within [0.0, 1.0]
 		var new_h = fmod(col.h + hue_offset, 1.0)
-		new_colors.append(Color.from_hsv(new_h, col.s, col.v, col.a))
+
+		if new_h < 0.0:
+			new_h += 1.0
+
+		new_colors.append(
+			Color.from_hsv(
+				new_h,
+				col.s,
+				col.v,
+				col.a
+			)
+		)
+
 	return new_colors
 
 func set_pixels(amount):
