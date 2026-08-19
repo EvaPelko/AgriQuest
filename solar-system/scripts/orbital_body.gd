@@ -37,11 +37,15 @@ extends AnimatableBody2D
 @export var name_label: Label
 @export var speed_label: Label
 @export var habitability_label: Label
+@export var season_label: Label
 
-var is_habitable: bool = false # Tracks if the orbit is in the Goldilocks zone
+var is_in_habitable_zone: bool = false # Tracks if the orbit is in the Goldilocks zone
 
 signal planet_selected(planet_ref: Node2D)
 signal planet_deselected
+
+@export_category("Terraforming")
+@export var terraforming_data = TerraformingData.new()
 
 # --- VISUAL CONSTANTS ---
 const DIM_ALPHA: float = 0.25
@@ -78,6 +82,7 @@ func _ready() -> void:
 	# Scale it to 50% size on both axes
 	if rivers:
 		rivers.scale = Vector2(0.3, 0.3)
+	
 
 func setup_orbit_target() -> void:
 	# 1. If an explicit target was assigned in Inspector (e.g. Moon -> Planet)
@@ -239,6 +244,51 @@ func get_cloud_hue() -> float:
 	if rivers and rivers.has_method("get_cloud_hue"):
 		return rivers.get_cloud_hue()
 	return 0.0
+	
+# --- TERRAFORMING (axial tilt, rotation) ---
+func set_axial_tilt(value: float) -> void:
+	if not terraforming_data:
+		return
+
+	terraforming_data.axial_tilt = clamp(value, 0.0, 90.0)
+
+
+func get_axial_tilt() -> float:
+	if terraforming_data:
+		return terraforming_data.axial_tilt
+
+	return 0.0
+	
+func set_rotation_period(value: float) -> void:
+	if not terraforming_data:
+		return
+
+	terraforming_data.rotation_period_hours = max(1.0, value)
+
+
+func get_rotation_period() -> float:
+	if terraforming_data:
+		return terraforming_data.rotation_period_hours
+
+	return 24.0
+
+func set_planet_mass(value: float) -> void:
+	if not terraforming_data:
+		return
+
+	terraforming_data.mass_earths = max(0.1, value)
+
+func get_planet_mass() -> float:
+	if terraforming_data:
+		return terraforming_data.mass_earths
+
+	return 1.0
+
+func get_season_description() -> String:
+	if terraforming_data:
+		return terraforming_data.get_season_description()
+
+	return "Unknown"
 
 # --- GIZMO CALLBACK ---
 
@@ -259,11 +309,11 @@ func check_orbit_habitability() -> void:
 		# Formula for furthest point (apoapsis)
 		var apoapsis = semi_major_axis * (1.0 + eccentricity)
 		
-		is_habitable = (periapsis >= star_node.goldilocks_min_radius) and (apoapsis <= star_node.goldilocks_max_radius)
+		is_in_habitable_zone = (periapsis >= star_node.goldilocks_min_radius) and (apoapsis <= star_node.goldilocks_max_radius)
 		
 		if habitability_label:
-			if is_habitable:
-				habitability_label.text = "Orbit Status: HABITABLE"
+			if is_in_habitable_zone:
+				habitability_label.text = "Orbit Status: IN HABITABLE ZONE"
 				habitability_label.add_theme_color_override("font_color", Color.GREEN)
 			else:
 				habitability_label.text = "Orbit Status: UNINHABITABLE"
@@ -282,6 +332,8 @@ func set_ui_visible(visible_state: bool) -> void:
 		habitability_label.visible = visible_state
 	if name_label:
 		name_label.visible = visible_state
+	if season_label:
+		season_label.visible = visible_state
 
 func _draw() -> void:
 	if is_selected:

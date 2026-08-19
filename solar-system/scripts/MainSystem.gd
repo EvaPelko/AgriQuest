@@ -18,6 +18,9 @@ var can_deselect: bool = true
 @export var rivers_color_label: Label
 @export var cloud_color_slider: HSlider
 @export var cloud_color_label: Label
+@export var axial_tilt_panel: PanelContainer
+@export var axial_tilt_slider: HSlider
+@export var axial_tilt_label: Label
 
 var selected_planet: Node2D = null
 
@@ -40,6 +43,9 @@ var is_in_terraforming_mode: bool = false:
 			
 		if terraforming_panel:
 			terraforming_panel.visible = (is_in_terraforming_mode)
+		
+		if axial_tilt_panel:
+			axial_tilt_panel.visible = (is_in_terraforming_mode)
 			
 			
 # Default camera zoom levels
@@ -69,6 +75,9 @@ func _ready() -> void:
 	
 	if terraforming_panel:
 		terraforming_panel.visible = false
+	
+	if axial_tilt_panel:
+		axial_tilt_panel.visible = false
 		
 	if orbit_size_slider:
 		# Set slider bounds for semi-major axis (e.g. 100 to 2000 pixels)
@@ -96,6 +105,9 @@ func _ready() -> void:
 	if cloud_color_slider:
 		cloud_color_slider.value_changed.connect(_on_cloud_color_slider_value_changed)
 	
+	if axial_tilt_slider:
+		axial_tilt_slider.value_changed.connect(_on_axial_tilt_slider_value_changed)
+	
 func _on_land_color_slider_value_changed(value: float) -> void:
 	if selected_planet and selected_planet.has_method("shift_land_color"):
 		selected_planet.shift_land_color(value)
@@ -107,6 +119,19 @@ func _on_rivers_color_slider_value_changed(value: float) -> void:
 func _on_cloud_color_slider_value_changed(value: float) -> void:
 	if selected_planet and selected_planet.has_method("shift_cloud_color"):
 		selected_planet.shift_cloud_color(value)
+
+func _on_axial_tilt_slider_value_changed(value: float) -> void:
+	if not selected_planet:
+		return
+
+	if selected_planet.has_method("set_axial_tilt"):
+		selected_planet.set_axial_tilt(value)
+
+	_update_axial_tilt_label(value)
+	
+func _update_axial_tilt_label(value: float) -> void:
+	if axial_tilt_label:
+		axial_tilt_label.text = "Axial tilt: " + "%.1f°" % value
 
 func _on_gizmo_interaction_started() -> void:
 	can_deselect = false
@@ -152,6 +177,10 @@ func on_planet_selected(planet: Node2D) -> void:
 	
 	if cloud_color_slider and planet.has_method("get_cloud_hue"):
 		cloud_color_slider.set_value_no_signal(planet.get_cloud_hue())
+	
+	if axial_tilt_slider and planet.has_method("get_axial_tilt"):
+		axial_tilt_slider.set_value_no_signal(planet.get_axial_tilt())
+		_update_axial_tilt_label(planet.get_axial_tilt())
 
 # Helper function to grey out / enable the terraform button dynamically
 func _update_terraform_button_state() -> void:
