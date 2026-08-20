@@ -12,12 +12,16 @@
 script = ExtResource("5_hqhxj")
 metadata/_custom_type_script = "uid://ifpppwwjb38d"
 
-[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "planet_info_panel", "orbit_size_slider", "orbit_size_label", "terraforming_panel", "land_color_slider", "land_color_label", "rivers_color_slider", "rivers_color_label", "cloud_color_slider", "cloud_color_label", "axial_tilt_panel", "axial_tilt_slider", "axial_tilt_label")]
+[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "name_label", "speed_label", "habitability_zone_label", "season_label", "planet_info_panel", "orbit_size_slider", "orbit_size_label", "terraforming_panel", "land_color_slider", "land_color_label", "rivers_color_slider", "rivers_color_label", "cloud_color_slider", "cloud_color_label", "axial_tilt_panel", "axial_tilt_slider", "axial_tilt_label")]
 script = ExtResource("1_licsr")
 camera = NodePath("Camera2D")
 terraform_button = NodePath("CanvasLayer/SelectionPanel/TerraformButton")
 orbit_button = NodePath("CanvasLayer/SelectionPanel/OrbitButton")
 gizmo_handle = NodePath("GizmoHandle")
+name_label = NodePath("CanvasLayer/CanvasLayer/PlanetNameLabel")
+speed_label = NodePath("CanvasLayer/CanvasLayer/PlanetSpeedLabel")
+habitability_zone_label = NodePath("CanvasLayer/CanvasLayer/HabitableZoneLabel")
+season_label = NodePath("CanvasLayer/CanvasLayer/SeasonLabel")
 planet_info_panel = NodePath("CanvasLayer/PlanetInfoPanel")
 orbit_size_slider = NodePath("CanvasLayer/PlanetInfoPanel/VBoxContainer/OrbitSlider")
 orbit_size_label = NodePath("CanvasLayer/PlanetInfoPanel/VBoxContainer/OrbitLabel")
@@ -48,22 +52,17 @@ offset_bottom = -52.0
 
 [node name="Planet1" parent="SystemMap/EarthOrbit" unique_id=1024953742 instance=ExtResource("1_68j0k")]
 
-[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet1" index="1" unique_id=1389764719 node_paths=PackedStringArray("rivers", "gizmo_handle", "orbit_target")]
+[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet1" index="1" unique_id=1389764719 node_paths=PackedStringArray("gizmo_handle", "orbit_target")]
 object_name = "Earth"
-rivers = NodePath("")
 gizmo_handle = NodePath("../../../../GizmoHandle")
 orbit_target = NodePath("../../../Star/AnimatableBody2D")
 terraforming_data = SubResource("Resource_3igp5")
 
 [node name="Moon" parent="SystemMap/EarthOrbit/Planet1/AnimatableBody2D" index="3" unique_id=931381539 instance=ExtResource("3_rec6r")]
 
-[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet1/AnimatableBody2D/Moon" index="1" unique_id=1389764719 node_paths=PackedStringArray("orbit_target", "speed_label", "habitability_label")]
+[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet1/AnimatableBody2D/Moon" index="1" unique_id=1389764719 node_paths=PackedStringArray("orbit_target")]
 object_name = "Moon name"
-semi_major_axis = 30.0
-max_trail_length = 20
 orbit_target = NodePath("../..")
-speed_label = NodePath("../CanvasLayer/Label")
-habitability_label = NodePath("../CanvasLayer/Label2")
 
 [node name="MarsOrbit" type="Node2D" parent="SystemMap" unique_id=1604189839]
 
@@ -176,6 +175,39 @@ text = "Orbit semi major axis"
 layout_mode = 2
 max_value = 0.9
 step = 0.01
+
+[node name="CanvasLayer" type="CanvasLayer" parent="CanvasLayer" unique_id=349026657]
+
+[node name="HabitableZoneLabel" type="Label" parent="CanvasLayer/CanvasLayer" unique_id=791912373]
+offset_left = 29.0
+offset_top = 30.0
+offset_right = 69.0
+offset_bottom = 53.0
+metadata/_edit_use_anchors_ = true
+
+[node name="PlanetSpeedLabel" type="Label" parent="CanvasLayer/CanvasLayer" unique_id=2039309816]
+offset_left = 29.0
+offset_top = 60.0
+offset_right = 151.0
+offset_bottom = 83.0
+text = "Speed: 0.0 km/s"
+metadata/_edit_use_anchors_ = true
+
+[node name="PlanetNameLabel" type="Label" parent="CanvasLayer/CanvasLayer" unique_id=235224222]
+offset_left = 31.0
+offset_top = 99.0
+offset_right = 71.0
+offset_bottom = 122.0
+text = "Name"
+metadata/_edit_use_anchors_ = true
+
+[node name="SeasonLabel" type="Label" parent="CanvasLayer/CanvasLayer" unique_id=30837711]
+offset_left = 33.0
+offset_top = 136.0
+offset_right = 80.0
+offset_bottom = 159.0
+text = "Season"
+metadata/_edit_use_anchors_ = true
 
 [node name="GizmoHandle" parent="." unique_id=1335083992 instance=ExtResource("5_qm6kw")]
 

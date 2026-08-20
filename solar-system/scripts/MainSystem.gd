@@ -7,6 +7,12 @@ extends Node2D
 @export var gizmo_handle: OrbitGizmoHandle
 var can_deselect: bool = true
 
+@export_category("Planet info")
+@export var name_label: Label
+@export var speed_label: Label
+@export var habitability_zone_label: Label
+@export var season_label: Label
+
 @export_group("UI Controls")
 @export var planet_info_panel: PanelContainer
 @export var orbit_size_slider: HSlider   # Formerly eccentricity_slider
@@ -54,6 +60,8 @@ var terraform_zoom: Vector2 = Vector2(4.0, 4.0)
 var default_camera_position: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
+	
+	set_planet_ui_visible(false)
 	
 	if gizmo_handle:
 		gizmo_handle.gizmo_interaction_started.connect(_on_gizmo_interaction_started)
@@ -126,6 +134,10 @@ func _on_axial_tilt_slider_value_changed(value: float) -> void:
 
 	if selected_planet.has_method("set_axial_tilt"):
 		selected_planet.set_axial_tilt(value)
+	
+	if season_label:
+		var season = selected_planet.get_season_description()
+		season_label.text = "Season variability: " + season
 
 	_update_axial_tilt_label(value)
 	
@@ -149,6 +161,9 @@ func connect_planet_signals() -> void:
 				planet.planet_deselected.connect(on_planet_deselected)
 
 func _process(delta: float) -> void:
+	if selected_planet and speed_label:
+		speed_label.text = "Speed: " + str("%.1f" % selected_planet.current_speed_km) + " km/s"
+		
 	if is_in_terraforming_mode and selected_planet and camera:
 		camera.global_position = camera.global_position.lerp(selected_planet.global_position, 10.0 * delta)
 
@@ -156,6 +171,22 @@ func _process(delta: float) -> void:
 
 func on_planet_selected(planet: Node2D) -> void:
 	selected_planet = planet
+	
+	if name_label and "object_name" in planet:
+		name_label.text = planet.object_name
+	
+	if habitability_zone_label:
+			if planet.is_in_habitable_zone:
+				habitability_zone_label.text = "Orbit Status: IN HABITABLE ZONE"
+				habitability_zone_label.add_theme_color_override("font_color", Color.GREEN)
+			else:
+				habitability_zone_label.text = "Orbit Status: UNINHABITABLE"
+				habitability_zone_label.add_theme_color_override("font_color", Color.RED)
+	
+	if season_label:
+		var season = planet.get_season_description()
+		season_label.text = "Season variability: " + season
+	
 	if terraform_button and not is_in_terraforming_mode:
 		terraform_button.visible = true
 		terraform_button.text = "Terraform " + planet.object_name
@@ -181,6 +212,19 @@ func on_planet_selected(planet: Node2D) -> void:
 	if axial_tilt_slider and planet.has_method("get_axial_tilt"):
 		axial_tilt_slider.set_value_no_signal(planet.get_axial_tilt())
 		_update_axial_tilt_label(planet.get_axial_tilt())
+	
+	set_planet_ui_visible(true)
+
+func set_planet_ui_visible(visible_state: bool) -> void:
+	queue_redraw()
+	if speed_label:
+		speed_label.visible = visible_state
+	if habitability_zone_label:
+		habitability_zone_label.visible = visible_state
+	if name_label:
+		name_label.visible = visible_state
+	if season_label:
+		season_label.visible = visible_state
 
 # Helper function to grey out / enable the terraform button dynamically
 func _update_terraform_button_state() -> void:
@@ -193,13 +237,15 @@ func _update_terraform_button_state() -> void:
 
 func on_planet_deselected() -> void:
 	if not is_in_terraforming_mode:
+		if planet_info_panel:
+			planet_info_panel.visible = false
+	
+		set_planet_ui_visible(false)
 		selected_planet = null
 		if terraform_button:
 			terraform_button.visible = false
 		reset_camera_zoom()
 	
-	if planet_info_panel:
-		planet_info_panel.visible = false
 		
 #--- SLIDER CALLBACK (Changes Orbit Size) ---
 

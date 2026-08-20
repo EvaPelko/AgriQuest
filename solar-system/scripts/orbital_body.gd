@@ -1,12 +1,7 @@
 extends AnimatableBody2D
 
 @export_category("Object info")
-@export var object_name: String = "Placeholder name":
-	set(value):
-		object_name = value
-		# Automatically update the label whenever object_name changes
-		if name_label:
-			name_label.text = object_name
+@export var object_name: String = "Placeholder name"
 
 @export_category("Orbit Configuration")
 @export var semi_major_axis: float = 160.0: # Size of the orbit (Controlled by Slider)
@@ -22,6 +17,8 @@ extends AnimatableBody2D
 		check_orbit_habitability()
 
 @export var max_trail_length: int = 200
+
+var current_speed_km: float = 0.0
 
 #@export var rivers: Control
 
@@ -41,9 +38,6 @@ var active_planet_visual: Node = null
 @export var pixel_to_km_scale: float = 0.5 # How many kilometers 1 pixel represents in the game universe
 
 @export_category("UI Connections")
-@export var name_label: Label
-@export var speed_label: Label
-@export var habitability_label: Label
 @export var season_label: Label
 
 var is_in_habitable_zone: bool = false # Tracks if the orbit is in the Goldilocks zone
@@ -78,8 +72,6 @@ func _ready() -> void:
 		orbit_ring.z_index = -1
 		# Start at low transparency by default
 		orbit_ring.modulate.a = DIM_ALPHA
-	
-	set_ui_visible(false)
 	
 	# Connect to eccentricity signal instead of resize signal
 	if gizmo_handle:
@@ -146,9 +138,7 @@ func _process(delta: float) -> void:
 		
 		# --- CALCULATE SPEED FOR UI ---
 		var linear_speed_pixels = base_orbital_momentum / radius
-		var linear_speed_km = linear_speed_pixels * pixel_to_km_scale
-		if speed_label:
-			speed_label.text = "Speed: " + str("%.1f" % linear_speed_km) + " km/s"
+		current_speed_km = linear_speed_pixels * pixel_to_km_scale
 	
 	# POSITIONING
 	# Conversion from polar coordinates (r, θ) to Cartesian coordinates (x, y)
@@ -168,7 +158,6 @@ func _process(delta: float) -> void:
 func select_planet() -> void:
 	get_tree().call_group("planets", "deselect_planet")
 	is_selected = true
-	set_ui_visible(true)
 	
 	# Highlight orbit line smoothly on selection
 	if orbit_ring:
@@ -183,7 +172,6 @@ func select_planet() -> void:
 func deselect_planet() -> void:
 	print("PLANET: deselect_planet() was triggered on ", object_name)
 	is_selected = false
-	set_ui_visible(false)
 	
 	# Fade orbit line back down to low transparency
 	if orbit_ring:
@@ -365,30 +353,11 @@ func check_orbit_habitability() -> void:
 		var apoapsis = semi_major_axis * (1.0 + eccentricity)
 		
 		is_in_habitable_zone = (periapsis >= star_node.goldilocks_min_radius) and (apoapsis <= star_node.goldilocks_max_radius)
-		
-		if habitability_label:
-			if is_in_habitable_zone:
-				habitability_label.text = "Orbit Status: IN HABITABLE ZONE"
-				habitability_label.add_theme_color_override("font_color", Color.GREEN)
-			else:
-				habitability_label.text = "Orbit Status: UNINHABITABLE"
-				habitability_label.add_theme_color_override("font_color", Color.RED)
 
 func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		get_viewport().set_input_as_handled()
 		select_planet()
-
-func set_ui_visible(visible_state: bool) -> void:
-	queue_redraw()
-	if speed_label:
-		speed_label.visible = visible_state
-	if habitability_label:
-		habitability_label.visible = visible_state
-	if name_label:
-		name_label.visible = visible_state
-	if season_label:
-		season_label.visible = visible_state
 
 func _draw() -> void:
 	if is_selected:
