@@ -67,3 +67,5 @@ gradient = SubResource("Gradient_cktii")
 
 [node name="OrbitRing" type="Line2D" parent="AnimatableBody2D" unique_id=1278178014]
 width = 1.0
+
+[node name="PlanetVisual" type="Node2D" parent="AnimatableBody2D" unique_id=1413548874]

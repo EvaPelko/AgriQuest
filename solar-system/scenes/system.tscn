@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://cney8m3ajtl6a" path="res://scenes/star.tscn" id="2_0i2li"]
 [ext_resource type="PackedScene" uid="uid://clqvlybt45o7r" path="res://pixel_planets/Star/Star.tscn" id="3_3igp5"]
 [ext_resource type="PackedScene" uid="uid://b1j8yb7pbjslp" path="res://scenes/moon.tscn" id="3_rec6r"]
-[ext_resource type="PackedScene" uid="uid://crdxh2i35dorc" path="res://pixel_planets/Rivers/Rivers.tscn" id="5_7re7h"]
 [ext_resource type="Script" uid="uid://ifpppwwjb38d" path="res://scripts/TerraformingData.gd" id="5_hqhxj"]
 [ext_resource type="PackedScene" uid="uid://bclyg41sot6jm" path="res://scenes/GizmoHandle.tscn" id="5_qm6kw"]
 
@@ -51,7 +50,7 @@ offset_bottom = -52.0
 
 [node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet1" index="1" unique_id=1389764719 node_paths=PackedStringArray("rivers", "gizmo_handle", "orbit_target")]
 object_name = "Earth"
-rivers = NodePath("Control")
+rivers = NodePath("")
 gizmo_handle = NodePath("../../../../GizmoHandle")
 orbit_target = NodePath("../../../Star/AnimatableBody2D")
 terraforming_data = SubResource("Resource_3igp5")
@@ -65,17 +64,6 @@ max_trail_length = 20
 orbit_target = NodePath("../..")
 speed_label = NodePath("../CanvasLayer/Label")
 habitability_label = NodePath("../CanvasLayer/Label2")
-
-[node name="Control" parent="SystemMap/EarthOrbit/Planet1/AnimatableBody2D" index="5" unique_id=1948388815 instance=ExtResource("5_7re7h")]
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = -15.0
-offset_top = -15.0
-offset_right = -15.0
-offset_bottom = -15.0
-grow_horizontal = 1
-grow_vertical = 1
 
 [node name="MarsOrbit" type="Node2D" parent="SystemMap" unique_id=1604189839]
 

@@ -1,15 +1,5 @@
 extends "res://pixel_planets/Planet.gd"
 
-# Store base colors so we can shift them relative to their original hue
-var base_land_colors: Array = []
-var base_river_colors: Array = []
-var base_cloud_colors: Array = []
-
-var current_hue_offset: float = 0.0
-var land_hue_offset: float = 0.0
-var river_hue_offset: float = 0.0
-var cloud_hue_offset: float = 0.0
-
 func _ready():
 	# Store initial base colors on start
 	_save_base_colors()

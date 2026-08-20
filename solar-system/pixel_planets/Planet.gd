@@ -6,6 +6,16 @@ var original_colors
 @export var relative_scale : float = 1.0
 @export var gui_zoom : float = 1.0
 
+# Store base colors so we can shift them relative to their original hue
+var base_land_colors: Array = []
+var base_river_colors: Array = []
+var base_cloud_colors: Array = []
+
+var current_hue_offset: float = 0.0
+var land_hue_offset: float = 0.0
+var river_hue_offset: float = 0.0
+var cloud_hue_offset: float = 0.0
+
 func _ready():
 	original_colors = get_colors()
 

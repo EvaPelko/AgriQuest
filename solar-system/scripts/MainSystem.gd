@@ -185,9 +185,9 @@ func on_planet_selected(planet: Node2D) -> void:
 # Helper function to grey out / enable the terraform button dynamically
 func _update_terraform_button_state() -> void:
 	if terraform_button and selected_planet:
-		if "is_habitable" in selected_planet:
+		if "is_in_habitable_zone" in selected_planet:
 			# Button is disabled (greyed out) if NOT habitable
-			terraform_button.disabled = not selected_planet.is_habitable
+			terraform_button.disabled = not selected_planet.is_in_habitable_zone
 		else:
 			terraform_button.disabled = false
 

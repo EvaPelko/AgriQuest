@@ -139,7 +139,7 @@ shader_parameter/seed = 1.175
 shader_parameter/time = 0.0
 shader_parameter/should_dither = true
 
-[node name="DryTerran" instance=ExtResource("1")]
+[node name="DryTerran" unique_id=837176674 instance=ExtResource("1")]
 custom_minimum_size = Vector2(0, 0)
 layout_mode = 3
 anchors_preset = 15
@@ -149,9 +149,10 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 1
 size_flags_vertical = 1
+mouse_filter = 2
 script = ExtResource("2")
 
-[node name="Land" type="ColorRect" parent="." index="0"]
+[node name="Land" type="ColorRect" parent="." index="0" unique_id=154282889]
 material = SubResource("4")
 layout_mode = 0
 offset_right = 100.0

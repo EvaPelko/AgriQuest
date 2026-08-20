@@ -12,6 +12,15 @@ var rotation_period_hours: float = 24.0
 @export_range(0.1, 5.0, 0.1)
 var mass_earths: float = 1.0
 
+enum PlanetType {
+	RIVERS,
+	LAVA,
+	GAS_GIANT,
+	DRY_TERRAIN
+}
+
+@export var planet_type: PlanetType = PlanetType.LAVA
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -32,6 +41,16 @@ func get_season_description() -> String:
 	else:
 		return "Extreme"
 		
+func generate_planet_type(distance_from_star: float) -> String:
+	if distance_from_star < 80.0:
+		return "lava"
+	elif distance_from_star < 180.0:
+		return "rocky"
+	elif distance_from_star < 300.0:
+		return "ice"
+	else:
+		return "gas_giant"		
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass

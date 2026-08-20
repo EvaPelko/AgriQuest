@@ -1,4 +1,4 @@
-extends "res://Planets/Planet.gd"
+extends "res://pixel_planets/Planet.gd"
 
 func set_pixels(amount):
 	$Land.material.set_shader_parameter("pixels", amount)

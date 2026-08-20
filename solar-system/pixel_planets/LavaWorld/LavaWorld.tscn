@@ -49,29 +49,29 @@ shader_parameter/OCTAVES = 4
 shader_parameter/seed = 2.527
 shader_parameter/time = 0.0
 
-[node name="LavaWorld" instance=ExtResource("1")]
-custom_minimum_size = Vector2(0, 0)
+[node name="LavaWorld" unique_id=257304405 instance=ExtResource("1")]
 layout_mode = 3
 anchors_preset = 15
 offset_right = -412.0
 offset_bottom = -200.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("4")
 
-[node name="Land" type="ColorRect" parent="." index="0"]
+[node name="Land" type="ColorRect" parent="." index="0" unique_id=1571537990]
 material = SubResource("1")
 layout_mode = 0
 offset_right = 100.0
 offset_bottom = 100.0
 
-[node name="Craters" type="ColorRect" parent="." index="1"]
+[node name="Craters" type="ColorRect" parent="." index="1" unique_id=163047533]
 material = SubResource("2")
 layout_mode = 0
 offset_right = 100.0
 offset_bottom = 100.0
 
-[node name="LavaRivers" type="ColorRect" parent="." index="2"]
+[node name="LavaRivers" type="ColorRect" parent="." index="2" unique_id=1142246425]
 material = SubResource("3")
 layout_mode = 0
 offset_right = 100.0

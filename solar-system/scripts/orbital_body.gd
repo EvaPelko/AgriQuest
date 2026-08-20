@@ -23,7 +23,14 @@ extends AnimatableBody2D
 
 @export var max_trail_length: int = 200
 
-@export var rivers: Control
+#@export var rivers: Control
+
+const RIVERS_SCENE = preload("res://pixel_planets/Rivers/Rivers.tscn")
+const LAVA_SCENE = preload("res://pixel_planets/LavaWorld/LavaWorld.tscn")
+const GAS_GIANT_SCENE = preload("res://pixel_planets/GasPlanetLayers/GasPlanetLayers.tscn")
+const DRY_TERRAIN_SCENE = preload("res://pixel_planets/DryTerran/DryTerran.tscn")
+@onready var planet_visual: Node2D = $PlanetVisual
+var active_planet_visual: Node = null
 
 @export_category("Gizmo Setup")
 @export var gizmo_handle: OrbitGizmoHandle
@@ -60,6 +67,8 @@ var angle: float = 0.0
 @onready var orbit_ring: Line2D = $OrbitRing
 
 func _ready() -> void:
+	print("Planet visual: ", planet_visual)
+	create_planet_visual()
 	if movement_trail:
 		movement_trail.top_level = true
 		movement_trail.z_index = -2
@@ -78,10 +87,7 @@ func _ready() -> void:
 	
 	# Wait until the scene tree is finished loading before setting up targets
 	call_deferred("setup_orbit_target")
-	
-	# Scale it to 50% size on both axes
-	if rivers:
-		rivers.scale = Vector2(0.3, 0.3)
+
 	
 
 func setup_orbit_target() -> void:
@@ -213,36 +219,74 @@ func draw_orbit_ring() -> void:
 
 # --- COLORS ---
 
+func get_planet_scene() -> PackedScene:
+	match terraforming_data.planet_type:
+		TerraformingData.PlanetType.RIVERS:
+			return RIVERS_SCENE
+
+		TerraformingData.PlanetType.LAVA:
+			return LAVA_SCENE
+
+		TerraformingData.PlanetType.GAS_GIANT:
+			return GAS_GIANT_SCENE
+
+		TerraformingData.PlanetType.DRY_TERRAIN:
+			return DRY_TERRAIN_SCENE
+
+	return RIVERS_SCENE
+
+func create_planet_visual() -> void:
+	if not terraforming_data:
+		return
+
+	var scene := get_planet_scene()
+	active_planet_visual = scene.instantiate()
+
+	planet_visual.add_child(active_planet_visual)
+
+	# Make visual sit directly on the orbital body's anchor
+	active_planet_visual.scale = Vector2(0.3, 0.3)
+	active_planet_visual.position = Vector2(-15, -15)
+	
+	disable_mouse_on_controls(active_planet_visual)
+
+func disable_mouse_on_controls(node: Node) -> void:
+	if node is Control:
+		node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	for child in node.get_children():
+		disable_mouse_on_controls(child)
+
 func shift_land_color(hue_offset: float) -> void:
-	if rivers and rivers.has_method("shift_planet_land_hue"):
-		rivers.shift_planet_land_hue(hue_offset)
+	if active_planet_visual and active_planet_visual.has_method("shift_planet_land_hue"):
+		active_planet_visual.shift_planet_land_hue(hue_offset)
 
 func shift_rivers_color(hue_offset: float) -> void:
-	if rivers and rivers.has_method("shift_planet_rivers_hue"):
-		rivers.shift_planet_rivers_hue(hue_offset)
+	if active_planet_visual and active_planet_visual.has_method("shift_planet_rivers_hue"):
+		active_planet_visual.shift_planet_rivers_hue(hue_offset)
 
 func shift_cloud_color(hue_offset: float) -> void:
-	if rivers and rivers.has_method("shift_planet_cloud_hue"):
-		rivers.shift_planet_cloud_hue(hue_offset)
+	if active_planet_visual and active_planet_visual.has_method("shift_planet_cloud_hue"):
+		active_planet_visual.shift_planet_cloud_hue(hue_offset)
 
 func get_current_hue() -> float:
-	if rivers and "current_hue_offset" in rivers:
-		return rivers.current_hue_offset
+	if active_planet_visual and "current_hue_offset" in active_planet_visual:
+		return active_planet_visual.current_hue_offset
 	return 0.0
 
 func get_land_hue() -> float:
-	if rivers and rivers.has_method("get_land_hue"):
-		return rivers.get_land_hue()
+	if active_planet_visual and active_planet_visual.has_method("get_land_hue"):
+		return active_planet_visual.get_land_hue()
 	return 0.0
 
 func get_river_hue() -> float:
-	if rivers and rivers.has_method("get_river_hue"):
-		return rivers.get_river_hue()
+	if active_planet_visual and active_planet_visual.has_method("get_river_hue"):
+		return active_planet_visual.get_river_hue()
 	return 0.0
 
 func get_cloud_hue() -> float:
-	if rivers and rivers.has_method("get_cloud_hue"):
-		return rivers.get_cloud_hue()
+	if active_planet_visual and active_planet_visual.has_method("get_cloud_hue"):
+		return active_planet_visual.get_cloud_hue()
 	return 0.0
 	
 # --- TERRAFORMING (axial tilt, rotation) ---
@@ -251,7 +295,6 @@ func set_axial_tilt(value: float) -> void:
 		return
 
 	terraforming_data.axial_tilt = clamp(value, 0.0, 90.0)
-
 
 func get_axial_tilt() -> float:
 	if terraforming_data:
@@ -264,7 +307,6 @@ func set_rotation_period(value: float) -> void:
 		return
 
 	terraforming_data.rotation_period_hours = max(1.0, value)
-
 
 func get_rotation_period() -> float:
 	if terraforming_data:

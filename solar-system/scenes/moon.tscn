@@ -14,14 +14,17 @@ colors = PackedColorArray(0, 0, 0, 0, 0.72464263, 0.7246426, 0.7246426, 0.545098
 [node name="Moon" type="Node2D" unique_id=1024953742]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=831644530]
+visible = false
 
 [node name="Label2" type="Label" parent="CanvasLayer" unique_id=2002577599]
+visible = false
 offset_left = 29.0
 offset_top = 30.0
 offset_right = 69.0
 offset_bottom = 53.0
 
 [node name="Label" type="Label" parent="CanvasLayer" unique_id=2012561616]
+visible = false
 offset_left = 29.0
 offset_top = 60.0
 offset_right = 151.0
