@@ -19,7 +19,7 @@ enum PlanetType {
 	DRY_TERRAIN
 }
 
-@export var planet_type: PlanetType = PlanetType.LAVA
+@export var planet_type: PlanetType = PlanetType.RIVERS
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

@@ -243,10 +243,14 @@ func create_planet_visual() -> void:
 	active_planet_visual = scene.instantiate()
 
 	planet_visual.add_child(active_planet_visual)
+	
+	make_materials_unique(active_planet_visual)
 
 	# Make visual sit directly on the orbital body's anchor
 	active_planet_visual.scale = Vector2(0.3, 0.3)
 	active_planet_visual.position = Vector2(-15, -15)
+	
+	planet_visual.rotation = deg_to_rad(terraforming_data.axial_tilt)
 	
 	disable_mouse_on_controls(active_planet_visual)
 
@@ -256,6 +260,13 @@ func disable_mouse_on_controls(node: Node) -> void:
 
 	for child in node.get_children():
 		disable_mouse_on_controls(child)
+
+func make_materials_unique(node: Node) -> void:
+	if node is CanvasItem and node.material:
+		node.material = node.material.duplicate()
+
+	for child in node.get_children():
+		make_materials_unique(child)
 
 func shift_land_color(hue_offset: float) -> void:
 	if active_planet_visual and active_planet_visual.has_method("shift_planet_land_hue"):
@@ -295,6 +306,8 @@ func set_axial_tilt(value: float) -> void:
 		return
 
 	terraforming_data.axial_tilt = clamp(value, 0.0, 90.0)
+	
+	planet_visual.rotation = deg_to_rad(terraforming_data.axial_tilt)
 
 func get_axial_tilt() -> float:
 	if terraforming_data:

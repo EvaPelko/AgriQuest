@@ -88,3 +88,42 @@ func get_layers():
 
 func toggle_layer(num):
 	get_children()[num].visible = !get_children()[num].visible
+
+func _shift_color_array(color_array: Array, hue_offset: float) -> Array:
+	var new_colors = []
+
+	for col in color_array:
+		var new_h = fmod(col.h + hue_offset, 1.0)
+
+		if new_h < 0.0:
+			new_h += 1.0
+
+		new_colors.append(
+			Color.from_hsv(
+				new_h,
+				col.s,
+				col.v,
+				col.a
+			)
+		)
+
+	return new_colors
+
+func shift_planet_land_hue(_hue_offset: float) -> void:
+	pass
+
+func shift_planet_rivers_hue(_hue_offset: float) -> void:
+	pass
+
+func shift_planet_cloud_hue(_hue_offset: float) -> void:
+	pass
+
+
+func get_land_hue() -> float:
+	return land_hue_offset
+
+func get_river_hue() -> float:
+	return river_hue_offset
+
+func get_cloud_hue() -> float:
+	return cloud_hue_offset

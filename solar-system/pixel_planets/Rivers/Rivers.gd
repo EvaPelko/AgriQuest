@@ -60,25 +60,6 @@ func get_river_hue() -> float:
 func get_cloud_hue() -> float:
 	return cloud_hue_offset
 
-func _shift_color_array(color_array: Array, hue_offset: float) -> Array:
-	var new_colors = []
-
-	for col in color_array:
-		var new_h = fmod(col.h + hue_offset, 1.0)
-
-		if new_h < 0.0:
-			new_h += 1.0
-
-		new_colors.append(
-			Color.from_hsv(
-				new_h,
-				col.s,
-				col.v,
-				col.a
-			)
-		)
-
-	return new_colors
 
 func set_pixels(amount):
 	$Land.material.set_shader_parameter("pixels", amount)
