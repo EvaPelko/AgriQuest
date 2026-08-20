@@ -12,8 +12,11 @@ var can_deselect: bool = true
 @export var speed_label: Label
 @export var habitability_zone_label: Label
 @export var season_label: Label
+@export var temperature_label: Label
 
 @export_group("UI Controls")
+@export var terraforming_hud_canvas: CanvasLayer
+@export var planet_info_canvas: CanvasLayer
 @export var planet_info_panel: PanelContainer
 @export var orbit_size_slider: HSlider   # Formerly eccentricity_slider
 @export var orbit_size_label: Label     # Displays current orbit radius/a
@@ -34,6 +37,12 @@ var is_in_terraforming_mode: bool = false:
 	set(value):
 		is_in_terraforming_mode = value
 		
+		if terraforming_hud_canvas:
+			if is_in_terraforming_mode:
+				terraforming_hud_canvas.show()
+			else:
+				terraforming_hud_canvas.hide()
+				
 		# Automatically update UI visibility whenever state changes
 		if orbit_button:
 			orbit_button.visible = is_in_terraforming_mode
@@ -43,15 +52,9 @@ var is_in_terraforming_mode: bool = false:
 			# or show it if we are back in system view AND a planet is selected
 			terraform_button.visible = (not is_in_terraforming_mode) and (selected_planet != null)
 		
-		# Hide the right side panel during terraforming mode
+		# Hide the  orbit panel during terraforming mode
 		if planet_info_panel:
 			planet_info_panel.visible = (not is_in_terraforming_mode) and (selected_planet != null)
-			
-		if terraforming_panel:
-			terraforming_panel.visible = (is_in_terraforming_mode)
-		
-		if axial_tilt_panel:
-			axial_tilt_panel.visible = (is_in_terraforming_mode)
 			
 			
 # Default camera zoom levels
@@ -60,8 +63,18 @@ var terraform_zoom: Vector2 = Vector2(4.0, 4.0)
 var default_camera_position: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
+				
+	if planet_info_canvas:
+			if selected_planet:
+				planet_info_canvas.show()
+			else:
+				planet_info_canvas.hide()
 	
-	set_planet_ui_visible(false)
+	if terraforming_hud_canvas:
+			if is_in_terraforming_mode:
+				terraforming_hud_canvas.show()
+			else:
+				terraforming_hud_canvas.hide()
 	
 	if gizmo_handle:
 		gizmo_handle.gizmo_interaction_started.connect(_on_gizmo_interaction_started)
@@ -80,12 +93,6 @@ func _ready() -> void:
 	
 	if planet_info_panel:
 		planet_info_panel.visible = false
-	
-	if terraforming_panel:
-		terraforming_panel.visible = false
-	
-	if axial_tilt_panel:
-		axial_tilt_panel.visible = false
 		
 	if orbit_size_slider:
 		# Set slider bounds for semi-major axis (e.g. 100 to 2000 pixels)
@@ -175,6 +182,12 @@ func on_planet_selected(planet: Node2D) -> void:
 	if name_label and "object_name" in planet:
 		name_label.text = planet.object_name
 	
+	if planet_info_canvas:
+			if selected_planet:
+				planet_info_canvas.show()
+			else:
+				planet_info_canvas.hide()
+	
 	if habitability_zone_label:
 			if planet.is_in_habitable_zone:
 				habitability_zone_label.text = "Orbit Status: IN HABITABLE ZONE"
@@ -212,19 +225,7 @@ func on_planet_selected(planet: Node2D) -> void:
 	if axial_tilt_slider and planet.has_method("get_axial_tilt"):
 		axial_tilt_slider.set_value_no_signal(planet.get_axial_tilt())
 		_update_axial_tilt_label(planet.get_axial_tilt())
-	
-	set_planet_ui_visible(true)
 
-func set_planet_ui_visible(visible_state: bool) -> void:
-	queue_redraw()
-	if speed_label:
-		speed_label.visible = visible_state
-	if habitability_zone_label:
-		habitability_zone_label.visible = visible_state
-	if name_label:
-		name_label.visible = visible_state
-	if season_label:
-		season_label.visible = visible_state
 
 # Helper function to grey out / enable the terraform button dynamically
 func _update_terraform_button_state() -> void:
@@ -240,7 +241,12 @@ func on_planet_deselected() -> void:
 		if planet_info_panel:
 			planet_info_panel.visible = false
 	
-		set_planet_ui_visible(false)
+		if planet_info_canvas:
+			if selected_planet:
+				planet_info_canvas.show()
+			else:
+				planet_info_canvas.hide()
+				
 		selected_planet = null
 		if terraform_button:
 			terraform_button.visible = false

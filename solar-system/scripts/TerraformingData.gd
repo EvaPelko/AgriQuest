@@ -11,12 +11,24 @@ var rotation_period_hours: float = 24.0
 # --- PLANETARY PROPERTIES ---
 @export_range(0.1, 5.0, 0.1)
 var mass_earths: float = 1.0
+@export var atmosphere_density: float = 1.0
+@export var greenhouse_strength: float = 0.3
+@export var albedo: float = 0.3
+@export var geothermal_heat: float = 0.0
+@export var water_amount: float = 0.5
+
+var temperature: float = 0.0
 
 enum PlanetType {
 	RIVERS,
 	LAVA,
 	GAS_GIANT,
-	DRY_TERRAIN
+	DRY_TERRAIN,
+	ICE,
+	ASTEROID,
+	BLACK_HOLE,
+	GALAXY,
+	NO_ATMOSPHERE
 }
 
 @export var planet_type: PlanetType = PlanetType.RIVERS
@@ -50,6 +62,18 @@ func generate_planet_type(distance_from_star: float) -> String:
 		return "ice"
 	else:
 		return "gas_giant"		
+
+func determine_planet_type() -> PlanetType:
+	if temperature > 80.0 and water_amount < 0.2:
+		return PlanetType.LAVA
+
+	if temperature < -20.0:
+		return PlanetType.ICE
+
+	if water_amount > 0.7:
+		return PlanetType.RIVERS
+
+	return PlanetType.DRY_TERRAIN
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

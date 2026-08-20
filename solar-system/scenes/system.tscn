@@ -12,7 +12,7 @@
 script = ExtResource("5_hqhxj")
 metadata/_custom_type_script = "uid://ifpppwwjb38d"
 
-[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "name_label", "speed_label", "habitability_zone_label", "season_label", "planet_info_panel", "orbit_size_slider", "orbit_size_label", "terraforming_panel", "land_color_slider", "land_color_label", "rivers_color_slider", "rivers_color_label", "cloud_color_slider", "cloud_color_label", "axial_tilt_panel", "axial_tilt_slider", "axial_tilt_label")]
+[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "name_label", "speed_label", "habitability_zone_label", "season_label", "temperature_label", "terraforming_hud_canvas", "planet_info_canvas", "planet_info_panel", "orbit_size_slider", "orbit_size_label", "terraforming_panel", "land_color_slider", "land_color_label", "rivers_color_slider", "rivers_color_label", "cloud_color_slider", "cloud_color_label", "axial_tilt_panel", "axial_tilt_slider", "axial_tilt_label")]
 script = ExtResource("1_licsr")
 camera = NodePath("Camera2D")
 terraform_button = NodePath("CanvasLayer/SelectionPanel/TerraformButton")
@@ -22,6 +22,9 @@ name_label = NodePath("CanvasLayer/CanvasLayer/PlanetNameLabel")
 speed_label = NodePath("CanvasLayer/CanvasLayer/PlanetSpeedLabel")
 habitability_zone_label = NodePath("CanvasLayer/CanvasLayer/HabitableZoneLabel")
 season_label = NodePath("CanvasLayer/CanvasLayer/SeasonLabel")
+temperature_label = NodePath("CanvasLayer/CanvasLayer/TemperatureLabel")
+terraforming_hud_canvas = NodePath("CanvasLayer/TerraformingHUD")
+planet_info_canvas = NodePath("CanvasLayer/CanvasLayer")
 planet_info_panel = NodePath("CanvasLayer/PlanetInfoPanel")
 orbit_size_slider = NodePath("CanvasLayer/PlanetInfoPanel/VBoxContainer/OrbitSlider")
 orbit_size_label = NodePath("CanvasLayer/PlanetInfoPanel/VBoxContainer/OrbitLabel")
@@ -52,7 +55,7 @@ offset_bottom = -52.0
 
 [node name="Planet1" parent="SystemMap/EarthOrbit" unique_id=1024953742 instance=ExtResource("1_68j0k")]
 
-[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet1" index="1" unique_id=1389764719 node_paths=PackedStringArray("gizmo_handle", "orbit_target")]
+[node name="AnimatableBody2D" parent="SystemMap/EarthOrbit/Planet1" index="0" unique_id=1389764719 node_paths=PackedStringArray("gizmo_handle", "orbit_target")]
 object_name = "Earth"
 gizmo_handle = NodePath("../../../../GizmoHandle")
 orbit_target = NodePath("../../../Star/AnimatableBody2D")
@@ -68,7 +71,7 @@ orbit_target = NodePath("../..")
 
 [node name="Planet2" parent="SystemMap/MarsOrbit" unique_id=1294353069 instance=ExtResource("1_68j0k")]
 
-[node name="AnimatableBody2D" parent="SystemMap/MarsOrbit/Planet2" index="1" unique_id=1389764719 node_paths=PackedStringArray("gizmo_handle", "orbit_target")]
+[node name="AnimatableBody2D" parent="SystemMap/MarsOrbit/Planet2" index="0" unique_id=1389764719 node_paths=PackedStringArray("gizmo_handle", "orbit_target")]
 object_name = "Mars"
 semi_major_axis = 100.0
 eccentricity = 0.5
@@ -102,6 +105,20 @@ offset_bottom = 441.0
 text = "X"
 
 [node name="TerraformingHUD" type="CanvasLayer" parent="CanvasLayer" unique_id=784360361]
+
+[node name="AddGreenhouseButton" type="Button" parent="CanvasLayer/TerraformingHUD" unique_id=1758214828]
+offset_left = 844.0
+offset_top = 327.0
+offset_right = 1034.0
+offset_bottom = 385.0
+text = "Add greenhouse gasses"
+
+[node name="RemoveGreenhouseButton2" type="Button" parent="CanvasLayer/TerraformingHUD" unique_id=399790085]
+offset_left = 843.0
+offset_top = 391.0
+offset_right = 1033.0
+offset_bottom = 449.0
+text = "Remove greenhouse gasses"
 
 [node name="TerraformingPanel" type="PanelContainer" parent="CanvasLayer/TerraformingHUD" unique_id=497361845]
 offset_left = 870.0
@@ -207,6 +224,14 @@ offset_top = 136.0
 offset_right = 80.0
 offset_bottom = 159.0
 text = "Season"
+metadata/_edit_use_anchors_ = true
+
+[node name="TemperatureLabel" type="Label" parent="CanvasLayer/CanvasLayer" unique_id=1754665391]
+offset_left = 32.0
+offset_top = 175.0
+offset_right = 134.0
+offset_bottom = 198.0
+text = "Temperature"
 metadata/_edit_use_anchors_ = true
 
 [node name="GizmoHandle" parent="." unique_id=1335083992 instance=ExtResource("5_qm6kw")]

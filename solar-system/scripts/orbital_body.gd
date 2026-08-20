@@ -26,6 +26,12 @@ const RIVERS_SCENE = preload("res://pixel_planets/Rivers/Rivers.tscn")
 const LAVA_SCENE = preload("res://pixel_planets/LavaWorld/LavaWorld.tscn")
 const GAS_GIANT_SCENE = preload("res://pixel_planets/GasPlanetLayers/GasPlanetLayers.tscn")
 const DRY_TERRAIN_SCENE = preload("res://pixel_planets/DryTerran/DryTerran.tscn")
+const ASTEROID_SCENE = preload("res://pixel_planets/Asteroids/Asteroid.tscn")
+const BLACK_HOLE_SCENE = preload("res://pixel_planets/BlackHole/BlackHole.tscn")
+const GALAXY_SCENE = preload("res://pixel_planets/Galaxy/Galaxy.tscn")
+const ICE_SCENE = preload("res://pixel_planets/IceWorld/IceWorld.tscn")
+const NO_ATMOSPHERE_SCENE = preload("res://pixel_planets/NoAtmosphere/NoAtmosphere.tscn")
+
 @onready var planet_visual: Node2D = $PlanetVisual
 var active_planet_visual: Node = null
 
@@ -36,9 +42,6 @@ var active_planet_visual: Node = null
 @export var orbit_target: Node2D # If left empty, it defaults to orbiting the Star
 @export var default_local_gravity: float = 5000.0 # Fallback gravity used ONLY if the assigned target doesn't specify its own gravity
 @export var pixel_to_km_scale: float = 0.5 # How many kilometers 1 pixel represents in the game universe
-
-@export_category("UI Connections")
-@export var season_label: Label
 
 var is_in_habitable_zone: bool = false # Tracks if the orbit is in the Goldilocks zone
 
@@ -168,6 +171,8 @@ func select_planet() -> void:
 		gizmo_handle.attach_to_planet(self)
 		
 	planet_selected.emit(self)
+	
+	queue_redraw()
 
 func deselect_planet() -> void:
 	print("PLANET: deselect_planet() was triggered on ", object_name)
@@ -181,6 +186,8 @@ func deselect_planet() -> void:
 		gizmo_handle.detach()
 		
 	planet_deselected.emit()
+	
+	queue_redraw()
 
 # --- ORBIT RING GEOMETRY ---
 
