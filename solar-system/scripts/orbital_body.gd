@@ -42,6 +42,7 @@ var active_planet_visual: Node = null
 @export var orbit_target: Node2D # If left empty, it defaults to orbiting the Star
 @export var default_local_gravity: float = 5000.0 # Fallback gravity used ONLY if the assigned target doesn't specify its own gravity
 @export var pixel_to_km_scale: float = 0.5 # How many kilometers 1 pixel represents in the game universe
+@export var pixels_per_au: float = 160.0
 
 var is_in_habitable_zone: bool = false # Tracks if the orbit is in the Goldilocks zone
 
@@ -117,7 +118,7 @@ func setup_orbit_target() -> void:
 func _process(delta: float) -> void:
 	if not orbit_target:
 		return
-		
+	
 	# KEPLER'S FIRST LAW: THE LAW OF ELLIPSES
 	# Formula: r = (a * (1 - e^2)) / (1 + e * cos(θ))
 	var e_squared = eccentricity * eccentricity
@@ -309,6 +310,43 @@ func get_axial_tilt() -> float:
 		return terraforming_data.axial_tilt
 
 	return 0.0
+
+func get_temperature() -> float:
+	if terraforming_data:
+		return terraforming_data.calculate_temperature(get_current_distance_au())
+
+	return 0.0
+
+func get_hottest_temperature() -> float:
+	if terraforming_data:
+		var periapsis_au = pixels_to_au(get_periapsis())
+		var hottest_temp = terraforming_data.calculate_temperature(periapsis_au)
+		return hottest_temp
+
+	return 0.0
+
+func get_coldest_temperature() -> float:
+	if terraforming_data:
+		var apoapsis_au = pixels_to_au(get_apoapsis())
+		var coldest_temp = terraforming_data.calculate_temperature(apoapsis_au)
+		return coldest_temp
+
+	return 0.0
+
+func get_temperature_difference() -> float:
+	if not terraforming_data:
+		return 0.0
+
+	var periapsis_au = pixels_to_au(get_periapsis())
+	var apoapsis_au = pixels_to_au(get_apoapsis())
+
+	# Closest to star = hottest
+	var hottest_temp = terraforming_data.calculate_temperature(periapsis_au)
+
+	# Furthest from star = coldest
+	var coldest_temp = terraforming_data.calculate_temperature(apoapsis_au)
+
+	return hottest_temp - coldest_temp
 	
 func set_rotation_period(value: float) -> void:
 	if not terraforming_data:
@@ -355,11 +393,30 @@ func _on_eccentricity_changed_by_gizmo(new_e: float) -> void:
 func check_orbit_habitability() -> void:
 	if star_node:
 		# Formula for closest point (periapsis)
-		var periapsis = semi_major_axis * (1.0 - eccentricity)
+		var periapsis = get_periapsis()
 		# Formula for furthest point (apoapsis)
-		var apoapsis = semi_major_axis * (1.0 + eccentricity)
+		var apoapsis = get_apoapsis()
 		
 		is_in_habitable_zone = (periapsis >= star_node.goldilocks_min_radius) and (apoapsis <= star_node.goldilocks_max_radius)
+
+func get_periapsis() -> float:
+	return semi_major_axis * (1.0 - eccentricity)
+
+func get_apoapsis() -> float:
+	return semi_major_axis * (1.0 + eccentricity)
+	
+func get_current_distance_pixels() -> float:
+	var e_squared = eccentricity * eccentricity
+	var numerator = semi_major_axis * (1.0 - e_squared)
+	var denominator = 1.0 + (eccentricity * cos(angle))
+
+	return numerator / denominator
+
+func pixels_to_au(distance_pixels: float) -> float:
+	return distance_pixels / pixels_per_au
+
+func get_current_distance_au() -> float:
+	return pixels_to_au(get_current_distance_pixels())
 
 func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:

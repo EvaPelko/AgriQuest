@@ -170,6 +170,9 @@ func connect_planet_signals() -> void:
 func _process(delta: float) -> void:
 	if selected_planet and speed_label:
 		speed_label.text = "Speed: " + str("%.1f" % selected_planet.current_speed_km) + " km/s"
+	
+	if selected_planet and temperature_label:
+		temperature_label.text = "Temperature: " + str("%.1f" % selected_planet.get_temperature()) + " °C"
 		
 	if is_in_terraforming_mode and selected_planet and camera:
 		camera.global_position = camera.global_position.lerp(selected_planet.global_position, 10.0 * delta)
@@ -236,6 +239,16 @@ func _update_terraform_button_state() -> void:
 		else:
 			terraform_button.disabled = false
 
+func _update_habitability_label_state() -> void:
+	if habitability_zone_label:
+			if selected_planet.is_in_habitable_zone:
+				habitability_zone_label.text = "Orbit Status: IN HABITABLE ZONE"
+				habitability_zone_label.add_theme_color_override("font_color", Color.GREEN)
+			else:
+				habitability_zone_label.text = "Orbit Status: UNINHABITABLE"
+				habitability_zone_label.add_theme_color_override("font_color", Color.RED)
+
+
 func on_planet_deselected() -> void:
 	if not is_in_terraforming_mode:
 		if planet_info_panel:
@@ -260,6 +273,7 @@ func _on_orbit_size_slider_changed(value: float) -> void:
 		selected_planet.semi_major_axis = value
 		_update_size_label(value)
 		_update_terraform_button_state()
+		_update_habitability_label_state()
 		
 		# Reposition gizmo handle to match new orbit scale
 		if gizmo_handle:
@@ -271,6 +285,7 @@ func _on_gizmo_eccentricity_changed(new_e: float) -> void:
 	if selected_planet and "eccentricity" in selected_planet:
 		selected_planet.eccentricity = new_e
 		_update_terraform_button_state()
+		_update_habitability_label_state()
 
 func _update_size_label(val: float) -> void:
 	if orbit_size_label:

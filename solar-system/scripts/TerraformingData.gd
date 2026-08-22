@@ -75,6 +75,38 @@ func determine_planet_type() -> PlanetType:
 
 	return PlanetType.DRY_TERRAIN
 
+func calculate_temperature(distance_au: float) -> float:
+	# Prevent division by zero
+	distance_au = max(distance_au, 0.01)
+
+	# Approximate equilibrium temperature.
+	# 278.5 K is Earth's approximate blackbody temperature
+	# at 1 AU with zero albedo.
+	var equilibrium_temp_k := (
+		278.5
+		* pow(1.0 - albedo, 0.25)
+		/ sqrt(distance_au)
+	)
+
+	# Convert Kelvin → Celsius
+	var equilibrium_temp_c := equilibrium_temp_k - 273.15
+
+	# Simplified greenhouse warming.
+	# greenhouse_strength = 0.0 → no additional warming
+	# greenhouse_strength = 1.0 → +50°C
+	var greenhouse_warming := greenhouse_strength * 50.0
+
+	# Geothermal heat is already expressed as additional °C
+	var final_temperature := (
+		equilibrium_temp_c
+		+ greenhouse_warming
+		+ geothermal_heat
+	)
+
+	temperature = final_temperature
+
+	return temperature
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
