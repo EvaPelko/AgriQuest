@@ -13,6 +13,7 @@ var can_deselect: bool = true
 @export var habitability_zone_label: Label
 @export var season_label: Label
 @export var temperature_label: Label
+@export var temperature_range_label: Label
 
 @export_group("UI Controls")
 @export var terraforming_hud_canvas: CanvasLayer
@@ -173,7 +174,10 @@ func _process(delta: float) -> void:
 	
 	if selected_planet and temperature_label:
 		temperature_label.text = "Temperature: " + str("%.1f" % selected_planet.get_temperature()) + " °C"
-		
+	
+	if selected_planet and temperature_range_label:
+		temperature_range_label.text = "Temperature range: " + str("%.1f" % selected_planet.get_coldest_temperature()) + " °C  -  " + str("%.1f" % selected_planet.get_hottest_temperature()) + " °C"
+	
 	if is_in_terraforming_mode and selected_planet and camera:
 		camera.global_position = camera.global_position.lerp(selected_planet.global_position, 10.0 * delta)
 
