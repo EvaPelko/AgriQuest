@@ -51,6 +51,7 @@ signal planet_deselected
 
 @export_category("Terraforming")
 @export var terraforming_data = TerraformingData.new()
+var is_terraformed: bool = false
 
 # --- VISUAL CONSTANTS ---
 const DIM_ALPHA: float = 0.25
@@ -426,3 +427,6 @@ func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> vo
 func _draw() -> void:
 	if is_selected:
 		draw_arc(Vector2.ZERO, 25.0, 0.0, TAU, 32, Color(0.0, 1.0, 1.0, 0.8), 2.0)
+
+func mark_terraformed() -> void:
+	is_terraformed = true

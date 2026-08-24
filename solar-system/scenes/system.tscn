@@ -14,12 +14,13 @@
 script = ExtResource("5_hqhxj")
 metadata/_custom_type_script = "uid://ifpppwwjb38d"
 
-[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "name_label", "speed_label", "habitability_zone_label", "season_label", "temperature_label", "temperature_range_label", "terraforming_hud_canvas", "planet_info_canvas", "planet_info_panel", "orbit_size_slider", "orbit_size_label", "terraforming_panel", "land_color_slider", "land_color_label", "rivers_color_slider", "rivers_color_label", "cloud_color_slider", "cloud_color_label", "axial_tilt_panel", "axial_tilt_slider", "axial_tilt_label")]
+[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "terraforming_energy_label", "name_label", "speed_label", "habitability_zone_label", "season_label", "temperature_label", "temperature_range_label", "terraforming_hud_canvas", "planet_info_canvas", "planet_info_panel", "orbit_size_slider", "orbit_size_label", "terraforming_panel", "land_color_slider", "land_color_label", "rivers_color_slider", "rivers_color_label", "cloud_color_slider", "cloud_color_label", "axial_tilt_panel", "axial_tilt_slider", "axial_tilt_label", "add_greenhouse_gasses_button", "remove_greenhouse_gasses_button", "end_screen_canvas", "restart_button")]
 script = ExtResource("1_licsr")
 camera = NodePath("Camera2D")
 terraform_button = NodePath("CanvasLayer/SelectionPanel/TerraformButton")
 orbit_button = NodePath("CanvasLayer/SelectionPanel/OrbitButton")
 gizmo_handle = NodePath("GizmoHandle")
+terraforming_energy_label = NodePath("CanvasLayer/TerraformingHUD/TerraformingEnergyLabel")
 name_label = NodePath("CanvasLayer/CanvasLayer/PlanetNameLabel")
 speed_label = NodePath("CanvasLayer/CanvasLayer/PlanetSpeedLabel")
 habitability_zone_label = NodePath("CanvasLayer/CanvasLayer/HabitableZoneLabel")
@@ -41,6 +42,10 @@ cloud_color_label = NodePath("CanvasLayer/TerraformingHUD/TerraformingPanel/VBox
 axial_tilt_panel = NodePath("CanvasLayer/TerraformingHUD/AxialTiltPanel")
 axial_tilt_slider = NodePath("CanvasLayer/TerraformingHUD/AxialTiltPanel/VBoxContainer/AxialTiltSlider")
 axial_tilt_label = NodePath("CanvasLayer/TerraformingHUD/AxialTiltPanel/VBoxContainer/AxialTiltLabel")
+add_greenhouse_gasses_button = NodePath("CanvasLayer/TerraformingHUD/AddGreenhouseButton")
+remove_greenhouse_gasses_button = NodePath("CanvasLayer/TerraformingHUD/RemoveGreenhouseButton")
+end_screen_canvas = NodePath("CanvasLayer/EndScreenCanvas")
+restart_button = NodePath("CanvasLayer/EndScreenCanvas/Blocker/EndScreen/RestartButton")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=923855365]
 
@@ -116,7 +121,7 @@ offset_right = 1034.0
 offset_bottom = 385.0
 text = "Add greenhouse gasses"
 
-[node name="RemoveGreenhouseButton2" type="Button" parent="CanvasLayer/TerraformingHUD" unique_id=399790085]
+[node name="RemoveGreenhouseButton" type="Button" parent="CanvasLayer/TerraformingHUD" unique_id=399790085]
 offset_left = 843.0
 offset_top = 391.0
 offset_right = 1033.0
@@ -177,6 +182,13 @@ layout_mode = 2
 max_value = 90.0
 step = 0.5
 value = 23.5
+
+[node name="TerraformingEnergyLabel" type="Label" parent="CanvasLayer/TerraformingHUD" unique_id=115198917]
+offset_left = 917.0
+offset_top = 19.0
+offset_right = 1082.0
+offset_bottom = 42.0
+text = "Terraforming energy:"
 
 [node name="PlanetInfoPanel" type="PanelContainer" parent="CanvasLayer" unique_id=534216205]
 offset_left = 469.0
@@ -244,6 +256,40 @@ offset_right = 132.0
 offset_bottom = 230.0
 text = "Orbital Temperature Range"
 metadata/_edit_use_anchors_ = true
+
+[node name="EndScreenCanvas" type="CanvasLayer" parent="CanvasLayer" unique_id=2126180261]
+
+[node name="Blocker" type="ColorRect" parent="CanvasLayer/EndScreenCanvas" unique_id=1432845272]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.39607844)
+
+[node name="EndScreen" type="VBoxContainer" parent="CanvasLayer/EndScreenCanvas/Blocker" unique_id=537958273]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -92.5
+offset_right = 80.0
+offset_bottom = 92.5
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="VictoryLabel" type="Label" parent="CanvasLayer/EndScreenCanvas/Blocker/EndScreen" unique_id=524726486]
+layout_mode = 2
+text = "Victory!"
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="CanvasLayer/EndScreenCanvas/Blocker/EndScreen" unique_id=243645438]
+layout_mode = 2
+text = "Restart game"
 
 [node name="GizmoHandle" parent="." unique_id=1335083992 instance=ExtResource("5_qm6kw")]
 

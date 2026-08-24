@@ -7,6 +7,9 @@ extends Node2D
 @export var gizmo_handle: OrbitGizmoHandle
 var can_deselect: bool = true
 
+var terraforming_energy: int = 10
+@export var terraforming_energy_label: Label
+
 @export_category("Planet info")
 @export var name_label: Label
 @export var speed_label: Label
@@ -31,6 +34,11 @@ var can_deselect: bool = true
 @export var axial_tilt_panel: PanelContainer
 @export var axial_tilt_slider: HSlider
 @export var axial_tilt_label: Label
+@export var add_greenhouse_gasses_button: Button
+@export var remove_greenhouse_gasses_button: Button
+
+@export var end_screen_canvas: CanvasLayer
+@export var restart_button: Button
 
 var selected_planet: Node2D = null
 
@@ -123,6 +131,21 @@ func _ready() -> void:
 	
 	if axial_tilt_slider:
 		axial_tilt_slider.value_changed.connect(_on_axial_tilt_slider_value_changed)
+	
+	if add_greenhouse_gasses_button:
+		add_greenhouse_gasses_button.pressed.connect(_on_add_greenhouse_button_pressed)
+	
+	if remove_greenhouse_gasses_button:
+		remove_greenhouse_gasses_button.pressed.connect(_on_remove_greenhouse_button_pressed)
+	
+	if terraforming_energy_label:
+		_update_terraforming_energy_label()
+	
+	if end_screen_canvas:
+		end_screen_canvas.visible = false
+	
+	if restart_button:
+		restart_button.pressed.connect(_on_restart_button_pressed)
 	
 func _on_land_color_slider_value_changed(value: float) -> void:
 	if selected_planet and selected_planet.has_method("shift_land_color"):
@@ -233,7 +256,6 @@ func on_planet_selected(planet: Node2D) -> void:
 		axial_tilt_slider.set_value_no_signal(planet.get_axial_tilt())
 		_update_axial_tilt_label(planet.get_axial_tilt())
 
-
 # Helper function to grey out / enable the terraform button dynamically
 func _update_terraform_button_state() -> void:
 	if terraform_button and selected_planet:
@@ -252,7 +274,6 @@ func _update_habitability_label_state() -> void:
 				habitability_zone_label.text = "Orbit Status: UNINHABITABLE"
 				habitability_zone_label.add_theme_color_override("font_color", Color.RED)
 
-
 func on_planet_deselected() -> void:
 	if not is_in_terraforming_mode:
 		if planet_info_panel:
@@ -268,7 +289,6 @@ func on_planet_deselected() -> void:
 		if terraform_button:
 			terraform_button.visible = false
 		reset_camera_zoom()
-	
 		
 #--- SLIDER CALLBACK (Changes Orbit Size) ---
 
@@ -333,3 +353,56 @@ func reset_camera_zoom() -> void:
 	var tween = create_tween().set_parallel(true)
 	tween.tween_property(camera, "zoom", system_zoom, 0.8).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(camera, "global_position", default_camera_position, 0.8).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	
+# TERRAFORMING
+func _update_terraforming_energy_label() -> void:
+	if terraforming_energy_label:
+		terraforming_energy_label.text = "Terraforming energy: " + str(terraforming_energy)
+		
+func _on_add_greenhouse_button_pressed() -> void:
+	if not selected_planet:
+		return
+
+	selected_planet.terraforming_data.add_greenhouse_gases(0.1)
+	terraforming_energy -= 1
+	
+	_update_terraforming_energy_label()
+
+	#_update_temperature_ui()
+	_check_terraforming_goal()
+
+func _on_remove_greenhouse_button_pressed() -> void:
+	if not selected_planet:
+		return
+
+	selected_planet.terraforming_data.remove_greenhouse_gases(0.1)
+	terraforming_energy -= 1
+	
+	_update_terraforming_energy_label()
+
+	#_update_temperature_ui()
+	_check_terraforming_goal()
+
+func _check_terraforming_goal() -> void:
+	var temp = selected_planet.get_temperature()
+	var variation = selected_planet.get_temperature_difference()
+
+	if temp >= 0.0 and temp <= 30.0 and variation <= 20.0:
+		print("PLANET HABITABLE!")
+		selected_planet.mark_terraformed()
+		_check_all_planets_finished()
+
+func _check_all_planets_finished() -> void:
+	var planets = get_tree().get_nodes_in_group("planets")
+
+	for planet in planets:
+		if not planet.is_terraformed:
+			return
+
+	_show_end_screen()
+
+func _show_end_screen() -> void:
+	end_screen_canvas.visible = true
+
+func _on_restart_button_pressed() -> void:
+	get_tree().reload_current_scene()

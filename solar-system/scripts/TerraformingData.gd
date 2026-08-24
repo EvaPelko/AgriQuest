@@ -107,6 +107,12 @@ func calculate_temperature(distance_au: float) -> float:
 
 	return temperature
 
+func add_greenhouse_gases(amount: float) -> void:
+	greenhouse_strength += amount
+	
+func remove_greenhouse_gases(amount: float) -> void:
+	greenhouse_strength -= amount
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
