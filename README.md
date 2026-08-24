@@ -24,10 +24,20 @@ In AgriQuest you are able to:
 
 All assets are self made unless otherwise specified.
 
+Pixel planets and galaxy background are from Deep-Fold on itch.io
+
+https://deep-fold.itch.io/space-background-generator 
+
+https://deep-fold.itch.io/pixel-planet-generator
+
+
 Inspiration:
+
 https://pin.it/5fCW98sp0 
+
 https://managore.itch.io/planetarium$0 
-https://deep-fold.itch.io/pixel-planet-generator$0 
+
 https://www.youtube.com/watch?v=Tu8yGWmsHEI&t=311s$0 
+
 https://science.nasa.gov/resource/orbits-and-keplers-laws/$0 
 
