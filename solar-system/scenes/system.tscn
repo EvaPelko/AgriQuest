@@ -7,14 +7,17 @@
 [ext_resource type="PackedScene" uid="uid://b1j8yb7pbjslp" path="res://scenes/moon.tscn" id="3_rec6r"]
 [ext_resource type="Script" uid="uid://ifpppwwjb38d" path="res://scripts/TerraformingData.gd" id="5_hqhxj"]
 [ext_resource type="PackedScene" uid="uid://bclyg41sot6jm" path="res://scenes/GizmoHandle.tscn" id="5_qm6kw"]
+[ext_resource type="Script" uid="uid://belodxg4k1l5" path="res://scripts/ClimateGraph.gd" id="7_lbyp1"]
 [ext_resource type="Texture2D" uid="uid://dq07xecpoumg5" path="res://assets/Space Background-2.png" id="8_hqhxj"]
 [ext_resource type="Texture2D" uid="uid://cakw0jqcws6km" path="res://assets/Space Background-5.png" id="9_7ifds"]
 
 [sub_resource type="Resource" id="Resource_3igp5"]
 script = ExtResource("5_hqhxj")
+atmosphere_density = 0.5
+greenhouse_strength = 0.1
 metadata/_custom_type_script = "uid://ifpppwwjb38d"
 
-[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "terraforming_energy_label", "name_label", "speed_label", "habitability_zone_label", "season_label", "temperature_label", "temperature_range_label", "terraforming_hud_canvas", "planet_info_canvas", "planet_info_panel", "orbit_size_slider", "orbit_size_label", "terraforming_panel", "land_color_slider", "land_color_label", "rivers_color_slider", "rivers_color_label", "cloud_color_slider", "cloud_color_label", "axial_tilt_panel", "axial_tilt_slider", "axial_tilt_label", "add_greenhouse_gasses_button", "remove_greenhouse_gasses_button", "end_screen_canvas", "restart_button")]
+[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "terraforming_energy_label", "name_label", "speed_label", "habitability_zone_label", "season_label", "temperature_label", "temperature_range_label", "terraforming_hud_canvas", "planet_info_canvas", "planet_info_panel", "orbit_size_slider", "orbit_size_label", "terraforming_panel", "land_color_slider", "land_color_label", "rivers_color_slider", "rivers_color_label", "cloud_color_slider", "cloud_color_label", "axial_tilt_panel", "axial_tilt_slider", "axial_tilt_label", "add_greenhouse_gasses_button", "remove_greenhouse_gasses_button", "climate_graph", "end_screen_canvas", "restart_button")]
 script = ExtResource("1_licsr")
 camera = NodePath("Camera2D")
 terraform_button = NodePath("CanvasLayer/SelectionPanel/TerraformButton")
@@ -44,6 +47,7 @@ axial_tilt_slider = NodePath("CanvasLayer/TerraformingHUD/AxialTiltPanel/VBoxCon
 axial_tilt_label = NodePath("CanvasLayer/TerraformingHUD/AxialTiltPanel/VBoxContainer/AxialTiltLabel")
 add_greenhouse_gasses_button = NodePath("CanvasLayer/TerraformingHUD/AddGreenhouseButton")
 remove_greenhouse_gasses_button = NodePath("CanvasLayer/TerraformingHUD/RemoveGreenhouseButton")
+climate_graph = NodePath("CanvasLayer/TerraformingHUD/ClimateGraph")
 end_screen_canvas = NodePath("CanvasLayer/EndScreenCanvas")
 restart_button = NodePath("CanvasLayer/EndScreenCanvas/Blocker/EndScreen/RestartButton")
 
@@ -189,6 +193,15 @@ offset_top = 19.0
 offset_right = 1082.0
 offset_bottom = 42.0
 text = "Terraforming energy:"
+
+[node name="ClimateGraph" type="Control" parent="CanvasLayer/TerraformingHUD" unique_id=1898338193]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 43.0
+offset_top = 300.0
+offset_right = 233.0
+offset_bottom = 490.0
+script = ExtResource("7_lbyp1")
 
 [node name="PlanetInfoPanel" type="PanelContainer" parent="CanvasLayer" unique_id=534216205]
 offset_left = 469.0
