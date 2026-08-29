@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://b57wfh0i21ki0" path="res://scripts/orbital_body.gd" id="1_cktii"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pyfwd"]
-radius = 12.0
+radius = 16.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_pyfwd"]
 
@@ -13,12 +13,9 @@ colors = PackedColorArray(0, 0, 0, 0, 0.72464263, 0.7246426, 0.7246426, 0.545098
 
 [node name="Planet" type="Node2D" unique_id=1024953742]
 
-[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719 node_paths=PackedStringArray("name_label", "speed_label", "habitability_label") groups=["planets"]]
+[node name="AnimatableBody2D" type="AnimatableBody2D" parent="." unique_id=1389764719 groups=["planets"]]
 input_pickable = true
 script = ExtResource("1_cktii")
-name_label = NodePath("")
-speed_label = NodePath("")
-habitability_label = NodePath("")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatableBody2D" unique_id=1826593461]
 shape = SubResource("CircleShape2D_pyfwd")

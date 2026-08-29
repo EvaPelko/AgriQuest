@@ -9,6 +9,8 @@ var can_deselect: bool = true
 
 var terraforming_energy: int = 10
 @export var terraforming_energy_label: Label
+var nitrogen_amount: int = 5
+@export var nitrogen_amount_label: Label
 
 @export_category("Planet info")
 @export var name_label: Label
@@ -39,11 +41,22 @@ var terraforming_energy: int = 10
 @export var add_geothermal_heat_button: Button
 @export var remove_geothermal_heat_button: Button
 @export var add_nitrogen_button: Button
+@export var remove_nitrogen_button: Button
 
 @export var climate_graph: Control
 
 @export var end_screen_canvas: CanvasLayer
 @export var restart_button: Button
+
+@export_category("Habitability Limits")
+
+@export var habitable_temp_min: float = -10.0
+@export var habitable_temp_max: float = 30.0
+
+@export var max_temp_variation: float = 20.0
+
+@export var habitable_atmosphere_min: float = 0.7
+@export var habitable_atmosphere_max: float = 1.3
 
 var selected_planet: Node2D = null
 
@@ -152,8 +165,14 @@ func _ready() -> void:
 	if add_nitrogen_button:
 		add_nitrogen_button.pressed.connect(_on_add_nitrogen_button_pressed)
 	
+	if remove_nitrogen_button:
+		remove_nitrogen_button.pressed.connect(_on_remove_nitrogen_button_pressed)
+	
 	if terraforming_energy_label:
 		_update_terraforming_energy_label()
+	
+	if nitrogen_amount_label:
+		_update_nitrogen_amount_label()
 	
 	if end_screen_canvas:
 		end_screen_canvas.visible = false
@@ -195,6 +214,7 @@ func _on_gizmo_interaction_started() -> void:
 
 func _on_gizmo_interaction_ended() -> void:
 	can_deselect = true
+	_update_climate_graph()
 
 func connect_planet_signals() -> void:
 	for planet in get_tree().get_nodes_in_group("planets"):
@@ -314,6 +334,7 @@ func _on_orbit_size_slider_changed(value: float) -> void:
 		_update_size_label(value)
 		_update_terraform_button_state()
 		_update_habitability_label_state()
+		_update_climate_graph()
 		
 		# Reposition gizmo handle to match new orbit scale
 		if gizmo_handle:
@@ -374,7 +395,11 @@ func reset_camera_zoom() -> void:
 func _update_terraforming_energy_label() -> void:
 	if terraforming_energy_label:
 		terraforming_energy_label.text = "Terraforming energy: " + str(terraforming_energy)
-		
+
+func _update_nitrogen_amount_label() -> void:
+	if nitrogen_amount_label:
+		nitrogen_amount_label.text = "Nitrogen amount: " + str(nitrogen_amount)
+	
 func _on_add_greenhouse_button_pressed() -> void:
 	if not selected_planet:
 		return
@@ -432,9 +457,22 @@ func _on_add_nitrogen_button_pressed() -> void:
 		return
 
 	selected_planet.terraforming_data.add_nitrogen(0.1)
-	terraforming_energy -= 1
+	nitrogen_amount -= 1
 	
-	_update_terraforming_energy_label()
+	_update_nitrogen_amount_label()
+	_update_climate_graph()
+
+	#_update_temperature_ui()
+	_check_terraforming_goal()
+
+func _on_remove_nitrogen_button_pressed() -> void:
+	if not selected_planet:
+		return
+
+	selected_planet.terraforming_data.remove_nitrogen(0.1)
+	nitrogen_amount += 1
+	
+	_update_nitrogen_amount_label()
 	_update_climate_graph()
 
 	#_update_temperature_ui()
@@ -449,23 +487,47 @@ func _update_climate_graph() -> void:
 		selected_planet.terraforming_data.atmosphere_density
 	)
 
+	climate_graph.set_habitable_temperature_range(
+	habitable_temp_min,
+	habitable_temp_max
+	)
+
+	climate_graph.set_habitable_atmosphere_range(
+	habitable_atmosphere_min,
+	habitable_atmosphere_max
+	)
+	
 func _check_terraforming_goal() -> void:
-	
 	var temp = selected_planet.get_temperature()
-	
-	var temp_ok = temp >= 0.0 and temp <= 30.0
-	var temp_variation_ok = selected_planet.get_temperature_difference() <= 20.0
+	var atmosphere = selected_planet.terraforming_data.atmosphere_density
+
+	var temp_ok = (
+		temp >= habitable_temp_min
+		and temp <= habitable_temp_max
+	)
+
+	var atmosphere_ok = (
+		atmosphere >= habitable_atmosphere_min
+		and atmosphere <= habitable_atmosphere_max
+	)
+
+	var temp_variation_ok = (
+		selected_planet.get_temperature_difference()
+		<= max_temp_variation
+	)
+
 	var season = selected_planet.get_season_description()
 
 	var seasons_ok = (
 		season == "Minimal"
-		or season == "Moderate")
-	
-	if temp_ok and temp_variation_ok and seasons_ok:
+		or season == "Moderate"
+	)
+
+	if temp_ok and atmosphere_ok and temp_variation_ok and seasons_ok:
 		print("PLANET HABITABLE!")
 		selected_planet.mark_terraformed()
 		_check_all_planets_finished()
-
+		
 func _check_all_planets_finished() -> void:
 	var planets = get_tree().get_nodes_in_group("planets")
 

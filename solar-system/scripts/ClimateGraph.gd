@@ -11,10 +11,30 @@ var max_temperature: float = 100.0
 var min_atmosphere: float = 0.0
 var max_atmosphere: float = 2.0
 
+var habitable_temp_min: float = -10.0
+var habitable_temp_max: float = 30.0
+
+var habitable_atmosphere_min: float = 0.5
+var habitable_atmosphere_max: float = 1.5
+
 
 func set_planet_values(new_temperature: float, new_atmosphere: float) -> void:
 	temperature = new_temperature
 	atmosphere = new_atmosphere
+	queue_redraw()
+
+func set_habitable_temperature_range(
+	min_temp: float,
+	max_temp: float ) -> void:
+	habitable_temp_min = min_temp
+	habitable_temp_max = max_temp
+	queue_redraw()
+
+func set_habitable_atmosphere_range(
+	min_atmosphere: float,
+	max_atmosphere: float ) -> void:
+	habitable_atmosphere_min = min_atmosphere
+	habitable_atmosphere_max = max_atmosphere
 	queue_redraw()
 
 func _draw() -> void:
@@ -106,7 +126,7 @@ func get_planet_position() -> Vector2:
 
 func draw_habitable_zone() -> void:
 	var left = remap(
-		0.5,
+		habitable_atmosphere_min,
 		min_atmosphere,
 		max_atmosphere,
 		0.0,
@@ -114,7 +134,7 @@ func draw_habitable_zone() -> void:
 	)
 
 	var right = remap(
-		1.5,
+		habitable_atmosphere_max,
 		min_atmosphere,
 		max_atmosphere,
 		0.0,
@@ -122,7 +142,7 @@ func draw_habitable_zone() -> void:
 	)
 
 	var top = remap(
-		30.0,
+		habitable_temp_max,
 		min_temperature,
 		max_temperature,
 		size.y,
@@ -130,7 +150,7 @@ func draw_habitable_zone() -> void:
 	)
 
 	var bottom = remap(
-		0.0,
+		habitable_temp_min,
 		min_temperature,
 		max_temperature,
 		size.y,
@@ -139,7 +159,10 @@ func draw_habitable_zone() -> void:
 
 	var rect = Rect2(
 		Vector2(left, top),
-		Vector2(right - left, bottom - top)
+		Vector2(
+			right - left,
+			bottom - top
+		)
 	)
 
 	draw_rect(

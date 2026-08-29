@@ -125,6 +125,10 @@ func add_nitrogen(amount: float) -> void:
 	greenhouse_strength += amount  * 0.25
 	atmosphere_density += amount
 
+func remove_nitrogen(amount: float) -> void:
+	greenhouse_strength -= amount  * 0.25
+	atmosphere_density -= amount
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
