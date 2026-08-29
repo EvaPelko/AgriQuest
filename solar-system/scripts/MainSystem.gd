@@ -36,6 +36,11 @@ var terraforming_energy: int = 10
 @export var axial_tilt_label: Label
 @export var add_greenhouse_gasses_button: Button
 @export var remove_greenhouse_gasses_button: Button
+@export var add_geothermal_heat_button: Button
+@export var remove_geothermal_heat_button: Button
+@export var add_nitrogen_button: Button
+
+@export var climate_graph: Control
 
 @export var end_screen_canvas: CanvasLayer
 @export var restart_button: Button
@@ -137,6 +142,15 @@ func _ready() -> void:
 	
 	if remove_greenhouse_gasses_button:
 		remove_greenhouse_gasses_button.pressed.connect(_on_remove_greenhouse_button_pressed)
+	
+	if add_geothermal_heat_button:
+		add_geothermal_heat_button.pressed.connect(_on_add_heat_button_pressed)
+	
+	if remove_geothermal_heat_button:
+		remove_geothermal_heat_button.pressed.connect(_on_remove_heat_button_pressed)
+	
+	if add_nitrogen_button:
+		add_nitrogen_button.pressed.connect(_on_add_nitrogen_button_pressed)
 	
 	if terraforming_energy_label:
 		_update_terraforming_energy_label()
@@ -255,6 +269,8 @@ func on_planet_selected(planet: Node2D) -> void:
 	if axial_tilt_slider and planet.has_method("get_axial_tilt"):
 		axial_tilt_slider.set_value_no_signal(planet.get_axial_tilt())
 		_update_axial_tilt_label(planet.get_axial_tilt())
+	
+	_update_climate_graph()
 
 # Helper function to grey out / enable the terraform button dynamically
 func _update_terraform_button_state() -> void:
@@ -313,7 +329,7 @@ func _on_gizmo_eccentricity_changed(new_e: float) -> void:
 
 func _update_size_label(val: float) -> void:
 	if orbit_size_label:
-		orbit_size_label.text = "Orbit Size: %d AU" % int(val)
+		orbit_size_label.text = "Orbit Size: %d " % int(val)
 		
 func _on_terraform_button_pressed() -> void:
 	if not selected_planet:
@@ -367,6 +383,7 @@ func _on_add_greenhouse_button_pressed() -> void:
 	terraforming_energy -= 1
 	
 	_update_terraforming_energy_label()
+	_update_climate_graph()
 
 	#_update_temperature_ui()
 	_check_terraforming_goal()
@@ -379,15 +396,72 @@ func _on_remove_greenhouse_button_pressed() -> void:
 	terraforming_energy -= 1
 	
 	_update_terraforming_energy_label()
+	_update_climate_graph()
 
 	#_update_temperature_ui()
 	_check_terraforming_goal()
 
-func _check_terraforming_goal() -> void:
-	var temp = selected_planet.get_temperature()
-	var variation = selected_planet.get_temperature_difference()
+func _on_add_heat_button_pressed() -> void:
+	if not selected_planet:
+		return
 
-	if temp >= 0.0 and temp <= 30.0 and variation <= 20.0:
+	selected_planet.terraforming_data.add_geothermal_heat(5)
+	terraforming_energy -= 1
+	
+	_update_terraforming_energy_label()
+	_update_climate_graph()
+
+	#_update_temperature_ui()
+	_check_terraforming_goal()
+
+func _on_remove_heat_button_pressed() -> void:
+	if not selected_planet:
+		return
+
+	selected_planet.terraforming_data.remove_geothermal_heat(5)
+	terraforming_energy -= 1
+	
+	_update_terraforming_energy_label()
+	_update_climate_graph()
+
+	#_update_temperature_ui()
+	_check_terraforming_goal()
+
+func _on_add_nitrogen_button_pressed() -> void:
+	if not selected_planet:
+		return
+
+	selected_planet.terraforming_data.add_nitrogen(0.1)
+	terraforming_energy -= 1
+	
+	_update_terraforming_energy_label()
+	_update_climate_graph()
+
+	#_update_temperature_ui()
+	_check_terraforming_goal()
+
+func _update_climate_graph() -> void:
+	if not selected_planet or not climate_graph:
+		return
+
+	climate_graph.set_planet_values(
+		selected_planet.get_temperature(),
+		selected_planet.terraforming_data.atmosphere_density
+	)
+
+func _check_terraforming_goal() -> void:
+	
+	var temp = selected_planet.get_temperature()
+	
+	var temp_ok = temp >= 0.0 and temp <= 30.0
+	var temp_variation_ok = selected_planet.get_temperature_difference() <= 20.0
+	var season = selected_planet.get_season_description()
+
+	var seasons_ok = (
+		season == "Minimal"
+		or season == "Moderate")
+	
+	if temp_ok and temp_variation_ok and seasons_ok:
 		print("PLANET HABITABLE!")
 		selected_planet.mark_terraformed()
 		_check_all_planets_finished()

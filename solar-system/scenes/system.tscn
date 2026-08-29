@@ -17,7 +17,7 @@ atmosphere_density = 0.5
 greenhouse_strength = 0.1
 metadata/_custom_type_script = "uid://ifpppwwjb38d"
 
-[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "terraforming_energy_label", "name_label", "speed_label", "habitability_zone_label", "season_label", "temperature_label", "temperature_range_label", "terraforming_hud_canvas", "planet_info_canvas", "planet_info_panel", "orbit_size_slider", "orbit_size_label", "terraforming_panel", "land_color_slider", "land_color_label", "rivers_color_slider", "rivers_color_label", "cloud_color_slider", "cloud_color_label", "axial_tilt_panel", "axial_tilt_slider", "axial_tilt_label", "add_greenhouse_gasses_button", "remove_greenhouse_gasses_button", "climate_graph", "end_screen_canvas", "restart_button")]
+[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "terraforming_energy_label", "name_label", "speed_label", "habitability_zone_label", "season_label", "temperature_label", "temperature_range_label", "terraforming_hud_canvas", "planet_info_canvas", "planet_info_panel", "orbit_size_slider", "orbit_size_label", "terraforming_panel", "land_color_slider", "land_color_label", "rivers_color_slider", "rivers_color_label", "cloud_color_slider", "cloud_color_label", "axial_tilt_panel", "axial_tilt_slider", "axial_tilt_label", "add_greenhouse_gasses_button", "remove_greenhouse_gasses_button", "add_geothermal_heat_button", "remove_geothermal_heat_button", "add_nitrogen_button", "climate_graph", "end_screen_canvas", "restart_button")]
 script = ExtResource("1_licsr")
 camera = NodePath("Camera2D")
 terraform_button = NodePath("CanvasLayer/SelectionPanel/TerraformButton")
@@ -47,6 +47,9 @@ axial_tilt_slider = NodePath("CanvasLayer/TerraformingHUD/AxialTiltPanel/VBoxCon
 axial_tilt_label = NodePath("CanvasLayer/TerraformingHUD/AxialTiltPanel/VBoxContainer/AxialTiltLabel")
 add_greenhouse_gasses_button = NodePath("CanvasLayer/TerraformingHUD/AddGreenhouseButton")
 remove_greenhouse_gasses_button = NodePath("CanvasLayer/TerraformingHUD/RemoveGreenhouseButton")
+add_geothermal_heat_button = NodePath("CanvasLayer/TerraformingHUD/AddHeatButton")
+remove_geothermal_heat_button = NodePath("CanvasLayer/TerraformingHUD/RemoveHeatButton")
+add_nitrogen_button = NodePath("CanvasLayer/TerraformingHUD/AddNitrogenButton")
 climate_graph = NodePath("CanvasLayer/TerraformingHUD/ClimateGraph")
 end_screen_canvas = NodePath("CanvasLayer/EndScreenCanvas")
 restart_button = NodePath("CanvasLayer/EndScreenCanvas/Blocker/EndScreen/RestartButton")
@@ -131,6 +134,27 @@ offset_top = 391.0
 offset_right = 1033.0
 offset_bottom = 449.0
 text = "Remove greenhouse gasses"
+
+[node name="AddHeatButton" type="Button" parent="CanvasLayer/TerraformingHUD" unique_id=422201955]
+offset_left = 630.0
+offset_top = 322.0
+offset_right = 820.0
+offset_bottom = 380.0
+text = "Add heat"
+
+[node name="AddNitrogenButton" type="Button" parent="CanvasLayer/TerraformingHUD" unique_id=1716003933]
+offset_left = 744.0
+offset_top = 465.0
+offset_right = 934.0
+offset_bottom = 523.0
+text = "Add nitrogen"
+
+[node name="RemoveHeatButton" type="Button" parent="CanvasLayer/TerraformingHUD" unique_id=1223961666]
+offset_left = 632.0
+offset_top = 393.0
+offset_right = 822.0
+offset_bottom = 451.0
+text = "Remove heat"
 
 [node name="TerraformingPanel" type="PanelContainer" parent="CanvasLayer/TerraformingHUD" unique_id=497361845]
 offset_left = 870.0
@@ -273,6 +297,7 @@ metadata/_edit_use_anchors_ = true
 [node name="EndScreenCanvas" type="CanvasLayer" parent="CanvasLayer" unique_id=2126180261]
 
 [node name="Blocker" type="ColorRect" parent="CanvasLayer/EndScreenCanvas" unique_id=1432845272]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -307,6 +332,7 @@ text = "Restart game"
 [node name="GizmoHandle" parent="." unique_id=1335083992 instance=ExtResource("5_qm6kw")]
 
 [node name="SpaceBackground2" type="Sprite2D" parent="." unique_id=1771146251]
+visible = false
 z_index = -7
 position = Vector2(240, 167)
 texture = ExtResource("8_hqhxj")

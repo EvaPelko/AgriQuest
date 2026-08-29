@@ -114,6 +114,16 @@ func add_greenhouse_gases(amount: float) -> void:
 func remove_greenhouse_gases(amount: float) -> void:
 	greenhouse_strength -= amount
 	atmosphere_density -= amount * 0.25
+	
+func add_geothermal_heat(amount: float) -> void:
+	geothermal_heat += amount
+
+func remove_geothermal_heat(amount: float) -> void:
+	geothermal_heat -= amount
+
+func add_nitrogen(amount: float) -> void:
+	greenhouse_strength += amount  * 0.25
+	atmosphere_density += amount
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
