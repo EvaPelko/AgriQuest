@@ -50,3 +50,5 @@ z_index = -1
 width = 2.0
 default_color = Color(0.93333334, 0.9490196, 1, 0.58431375)
 gradient = SubResource("Gradient_cktii")
+
+[node name="MoonVisual" type="Node2D" parent="AnimatableBody2D" unique_id=139450669]

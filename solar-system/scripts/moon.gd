@@ -13,6 +13,10 @@ extends AnimatableBody2D
 @export var default_local_gravity: float = 5000.0 # Fallback gravity used ONLY if the assigned target doesn't specify its own gravity
 @export var pixel_to_km_scale: float = 0.5 # How many kilometers 1 pixel represents in the game universe
 
+const NO_ATMOSPHERE_SCENE = preload("res://pixel_planets/NoAtmosphere/NoAtmosphere.tscn")
+@onready var moon_visual: Node2D = $MoonVisual
+var active_moon_visual: Node = null
+
 # --- VISUAL CONSTANTS ---
 const DIM_ALPHA: float = 0.25
 const HIGHLIGHT_ALPHA: float = 0.8
@@ -26,6 +30,7 @@ var angle: float = 0.0
 #@onready var orbit_ring: Line2D = $OrbitRing
 
 func _ready() -> void:
+	create_moon_visual()
 	#if movement_trail:
 		#movement_trail.top_level = true
 		#movement_trail.z_index = -2
@@ -103,4 +108,19 @@ func _process(delta: float) -> void:
 	var y = radius * sin(angle)
 	global_position = orbit_target.global_position + Vector2(x, y)
 	
+func create_moon_visual() -> void:
+
+	var scene := NO_ATMOSPHERE_SCENE
+	active_moon_visual = scene.instantiate()
+
+	moon_visual.add_child(active_moon_visual)
+	
+	#make_materials_unique(active_moon_visual)
+
+	# Make visual sit directly on the orbital body's anchor
+	active_moon_visual.scale = Vector2(0.08, 0.08)
+	active_moon_visual.position = Vector2(-4, -4)
+	
+	#disable_mouse_on_controls(active_moon_visual)
+
 	
