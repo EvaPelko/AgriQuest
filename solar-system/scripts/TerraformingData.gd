@@ -33,6 +33,9 @@ enum PlanetType {
 
 @export var planet_type: PlanetType = PlanetType.RIVERS
 
+func _init() -> void:
+	resource_local_to_scene = true
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.

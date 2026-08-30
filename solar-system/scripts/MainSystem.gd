@@ -36,6 +36,9 @@ var nitrogen_amount: int = 5
 @export var axial_tilt_panel: PanelContainer
 @export var axial_tilt_slider: HSlider
 @export var axial_tilt_label: Label
+
+@export var terraformed_label: Label
+
 @export var add_greenhouse_gasses_button: Button
 @export var remove_greenhouse_gasses_button: Button
 @export var add_geothermal_heat_button: Button
@@ -47,6 +50,7 @@ var nitrogen_amount: int = 5
 
 @export var end_screen_canvas: CanvasLayer
 @export var restart_button: Button
+@export var restart_button_orbit: Button
 
 @export_category("Habitability Limits")
 
@@ -176,9 +180,15 @@ func _ready() -> void:
 	
 	if end_screen_canvas:
 		end_screen_canvas.visible = false
+		
+	if terraformed_label:
+		terraformed_label.visible = false
 	
 	if restart_button:
 		restart_button.pressed.connect(_on_restart_button_pressed)
+	
+	if restart_button_orbit:
+		restart_button_orbit.pressed.connect(_on_restart_button_pressed)
 	
 func _on_land_color_slider_value_changed(value: float) -> void:
 	if selected_planet and selected_planet.has_method("shift_land_color"):
@@ -204,6 +214,7 @@ func _on_axial_tilt_slider_value_changed(value: float) -> void:
 		season_label.text = "Season variability: " + season
 
 	_update_axial_tilt_label(value)
+	_check_terraforming_goal()
 	
 func _update_axial_tilt_label(value: float) -> void:
 	if axial_tilt_label:
@@ -355,7 +366,9 @@ func _update_size_label(val: float) -> void:
 func _on_terraform_button_pressed() -> void:
 	if not selected_planet:
 		return
-		
+	
+	restart_button_orbit.visible = false
+	
 	# Setting this triggers the setter above, hiding terraform_button & showing orbit_button!
 	is_in_terraforming_mode = true
 	
@@ -366,6 +379,8 @@ func _on_terraform_button_pressed() -> void:
 func _on_orbit_button_pressed() -> void:
 	# Setting this triggers the setter above, hiding orbit_button & updating terraform_button!
 	is_in_terraforming_mode = false
+
+	restart_button_orbit.visible = true
 	
 	reset_camera_zoom()
 	print("Switched to orbit view")
@@ -478,6 +493,16 @@ func _on_remove_nitrogen_button_pressed() -> void:
 	#_update_temperature_ui()
 	_check_terraforming_goal()
 
+func _update_terraforming_buttons() -> void:
+	var has_energy := terraforming_energy > 0.0
+	var has_nitrogen := nitrogen_amount > 0.0
+
+	add_geothermal_heat_button.disabled = not has_energy
+	remove_geothermal_heat_button.disabled = not has_energy
+	remove_nitrogen_button.disabled = not has_energy
+
+	add_nitrogen_button.disabled = not has_nitrogen
+
 func _update_climate_graph() -> void:
 	if not selected_planet or not climate_graph:
 		return
@@ -497,7 +522,15 @@ func _update_climate_graph() -> void:
 	habitable_atmosphere_max
 	)
 	
+	if terraformed_label:
+		if selected_planet.is_terraformed:
+			terraformed_label.visible = true
+		else:
+			terraformed_label.visible = false
+	
 func _check_terraforming_goal() -> void:
+	_update_terraforming_buttons()
+	
 	var temp = selected_planet.get_temperature()
 	var atmosphere = selected_planet.terraforming_data.atmosphere_density
 
@@ -526,7 +559,11 @@ func _check_terraforming_goal() -> void:
 	if temp_ok and atmosphere_ok and temp_variation_ok and seasons_ok:
 		print("PLANET HABITABLE!")
 		selected_planet.mark_terraformed()
+		terraformed_label.visible = true
 		_check_all_planets_finished()
+	else:
+		selected_planet.mark_not_terraformed()
+		terraformed_label.visible = false
 		
 func _check_all_planets_finished() -> void:
 	var planets = get_tree().get_nodes_in_group("planets")

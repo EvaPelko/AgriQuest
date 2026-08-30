@@ -430,3 +430,6 @@ func _draw() -> void:
 
 func mark_terraformed() -> void:
 	is_terraformed = true
+	
+func mark_not_terraformed() -> void:
+	is_terraformed = false

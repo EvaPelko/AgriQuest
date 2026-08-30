@@ -167,7 +167,7 @@ func draw_habitable_zone() -> void:
 
 	draw_rect(
 		rect,
-		Color(0.2, 0.8, 0.3, 0.25)
+		Color(0.2, 0.8, 0.3, 0.5)
 	)
 
 func draw_planet_marker() -> void:

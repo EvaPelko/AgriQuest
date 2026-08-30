@@ -17,7 +17,7 @@ atmosphere_density = 0.5
 greenhouse_strength = 0.1
 metadata/_custom_type_script = "uid://ifpppwwjb38d"
 
-[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "terraforming_energy_label", "nitrogen_amount_label", "name_label", "speed_label", "habitability_zone_label", "season_label", "temperature_label", "temperature_range_label", "terraforming_hud_canvas", "planet_info_canvas", "planet_info_panel", "orbit_size_slider", "orbit_size_label", "terraforming_panel", "land_color_slider", "land_color_label", "rivers_color_slider", "rivers_color_label", "cloud_color_slider", "cloud_color_label", "axial_tilt_panel", "axial_tilt_slider", "axial_tilt_label", "add_greenhouse_gasses_button", "remove_greenhouse_gasses_button", "add_geothermal_heat_button", "remove_geothermal_heat_button", "add_nitrogen_button", "remove_nitrogen_button", "climate_graph", "end_screen_canvas", "restart_button")]
+[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "terraforming_energy_label", "nitrogen_amount_label", "name_label", "speed_label", "habitability_zone_label", "season_label", "temperature_label", "temperature_range_label", "terraforming_hud_canvas", "planet_info_canvas", "planet_info_panel", "orbit_size_slider", "orbit_size_label", "terraforming_panel", "land_color_slider", "land_color_label", "rivers_color_slider", "rivers_color_label", "cloud_color_slider", "cloud_color_label", "axial_tilt_panel", "axial_tilt_slider", "axial_tilt_label", "terraformed_label", "add_greenhouse_gasses_button", "remove_greenhouse_gasses_button", "add_geothermal_heat_button", "remove_geothermal_heat_button", "add_nitrogen_button", "remove_nitrogen_button", "climate_graph", "end_screen_canvas", "restart_button", "restart_button_orbit")]
 script = ExtResource("1_licsr")
 camera = NodePath("Camera2D")
 terraform_button = NodePath("CanvasLayer/SelectionPanel/TerraformButton")
@@ -46,6 +46,7 @@ cloud_color_label = NodePath("CanvasLayer/TerraformingHUD/TerraformingPanel/VBox
 axial_tilt_panel = NodePath("CanvasLayer/TerraformingHUD/AxialTiltPanel")
 axial_tilt_slider = NodePath("CanvasLayer/TerraformingHUD/AxialTiltPanel/VBoxContainer/AxialTiltSlider")
 axial_tilt_label = NodePath("CanvasLayer/TerraformingHUD/AxialTiltPanel/VBoxContainer/AxialTiltLabel")
+terraformed_label = NodePath("CanvasLayer/TerraformingHUD/TerraformedLabel")
 add_greenhouse_gasses_button = NodePath("CanvasLayer/TerraformingHUD/AddGreenhouseButton")
 remove_greenhouse_gasses_button = NodePath("CanvasLayer/TerraformingHUD/RemoveGreenhouseButton")
 add_geothermal_heat_button = NodePath("CanvasLayer/TerraformingHUD/AddHeatButton")
@@ -55,6 +56,7 @@ remove_nitrogen_button = NodePath("CanvasLayer/TerraformingHUD/RemoveNitrogenBut
 climate_graph = NodePath("CanvasLayer/TerraformingHUD/ClimateGraph")
 end_screen_canvas = NodePath("CanvasLayer/EndScreenCanvas")
 restart_button = NodePath("CanvasLayer/EndScreenCanvas/Blocker/EndScreen/RestartButton")
+restart_button_orbit = NodePath("CanvasLayer/RestartButtonOrbit")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=923855365]
 
@@ -243,6 +245,13 @@ offset_right = 233.0
 offset_bottom = 490.0
 script = ExtResource("7_lbyp1")
 
+[node name="TerraformedLabel" type="Label" parent="CanvasLayer/TerraformingHUD" unique_id=364872328]
+offset_left = 491.0
+offset_top = 31.0
+offset_right = 643.0
+offset_bottom = 54.0
+text = "Terraformed planet"
+
 [node name="PlanetInfoPanel" type="PanelContainer" parent="CanvasLayer" unique_id=534216205]
 offset_left = 469.0
 offset_top = 559.0
@@ -319,6 +328,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.39607844)
+metadata/_edit_lock_ = true
 
 [node name="EndScreen" type="VBoxContainer" parent="CanvasLayer/EndScreenCanvas/Blocker" unique_id=537958273]
 layout_mode = 1
@@ -344,12 +354,20 @@ horizontal_alignment = 1
 layout_mode = 2
 text = "Restart game"
 
+[node name="RestartButtonOrbit" type="Button" parent="CanvasLayer" unique_id=829259081]
+offset_left = 1023.0
+offset_top = 13.0
+offset_right = 1134.0
+offset_bottom = 44.0
+text = "Restart game"
+
 [node name="GizmoHandle" parent="." unique_id=1335083992 instance=ExtResource("5_qm6kw")]
 
 [node name="SpaceBackground2" type="Sprite2D" parent="." unique_id=1771146251]
 z_index = -7
 position = Vector2(240, 167)
 texture = ExtResource("8_hqhxj")
+metadata/_edit_lock_ = true
 
 [node name="SpaceBackground5" type="Sprite2D" parent="." unique_id=1813848638]
 visible = false
