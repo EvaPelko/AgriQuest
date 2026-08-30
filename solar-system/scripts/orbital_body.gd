@@ -46,8 +46,12 @@ var active_planet_visual: Node = null
 
 var is_in_habitable_zone: bool = false # Tracks if the orbit is in the Goldilocks zone
 
+var has_colony: bool = false
+var colony_timer: float = 0.0
+
 signal planet_selected(planet_ref: Node2D)
 signal planet_deselected
+signal colony_energy_generated(planet: Node2D, amount: float)
 
 @export_category("Terraforming")
 @export var terraforming_data = TerraformingData.new()
@@ -157,6 +161,16 @@ func _process(delta: float) -> void:
 		movement_trail.add_point(global_position)
 		if movement_trail.get_point_count() > max_trail_length:
 			movement_trail.remove_point(0)
+	
+	if has_colony:
+		if not is_terraformed:
+			destroy_colony()
+		else:
+			colony_timer += delta
+
+		if colony_timer >= 5.0:
+			colony_timer -= 5.0
+			colony_energy_generated.emit(self, 1.0)
 
 # --- SELECTION & OPACITY CONTROLS ---
 
@@ -433,3 +447,27 @@ func mark_terraformed() -> void:
 	
 func mark_not_terraformed() -> void:
 	is_terraformed = false
+
+func add_colony() -> void:
+	if not is_terraformed:
+		return
+
+	if has_colony:
+		return
+
+	has_colony = true
+
+	# Slight visual land shift
+	if active_planet_visual:
+		active_planet_visual.shift_planet_land_hue(0.05)
+
+func destroy_colony() -> void:
+	if not has_colony:
+		return
+
+	has_colony = false
+	colony_timer = 0.0
+
+	# Return land color
+	if active_planet_visual:
+		active_planet_visual.shift_planet_land_hue(0.0)

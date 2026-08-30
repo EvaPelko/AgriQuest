@@ -46,6 +46,10 @@ var nitrogen_amount: int = 5
 @export var add_nitrogen_button: Button
 @export var remove_nitrogen_button: Button
 
+@export var add_colony_button: Button
+
+@export var notification_manager: NotificationManager
+
 @export var climate_graph: Control
 
 @export var end_screen_canvas: CanvasLayer
@@ -189,6 +193,10 @@ func _ready() -> void:
 	
 	if restart_button_orbit:
 		restart_button_orbit.pressed.connect(_on_restart_button_pressed)
+		
+	if add_colony_button:
+		add_colony_button.disabled = true
+		add_colony_button.pressed.connect(_on_add_colony_button_pressed)
 	
 func _on_land_color_slider_value_changed(value: float) -> void:
 	if selected_planet and selected_planet.has_method("shift_land_color"):
@@ -300,6 +308,9 @@ func on_planet_selected(planet: Node2D) -> void:
 	if axial_tilt_slider and planet.has_method("get_axial_tilt"):
 		axial_tilt_slider.set_value_no_signal(planet.get_axial_tilt())
 		_update_axial_tilt_label(planet.get_axial_tilt())
+	
+	if not selected_planet.colony_energy_generated.is_connected(_on_colony_energy_generated):
+		selected_planet.colony_energy_generated.connect(_on_colony_energy_generated)
 	
 	_update_climate_graph()
 
@@ -561,6 +572,7 @@ func _check_terraforming_goal() -> void:
 		selected_planet.mark_terraformed()
 		terraformed_label.visible = true
 		_check_all_planets_finished()
+		_update_colony_button()
 	else:
 		selected_planet.mark_not_terraformed()
 		terraformed_label.visible = false
@@ -579,3 +591,31 @@ func _show_end_screen() -> void:
 
 func _on_restart_button_pressed() -> void:
 	get_tree().reload_current_scene()
+
+func _on_colony_energy_generated(planet: Node2D, amount: float) -> void:
+	terraforming_energy += amount
+
+	notification_manager.show_notification(
+		"Colony on %s generated +%.0f Terraforming Energy"
+		% [planet.object_name, amount]
+	)
+
+	_update_terraforming_buttons()
+	_update_terraforming_energy_label()
+		
+func _on_add_colony_button_pressed() -> void:
+	if not selected_planet:
+		return
+
+	selected_planet.add_colony()
+	_update_colony_button()
+
+func _update_colony_button() -> void:
+	if not selected_planet:
+		add_colony_button.disabled = true
+		return
+	
+	add_colony_button.disabled = (
+		not selected_planet.is_terraformed
+		or selected_planet.has_colony
+	)
