@@ -14,8 +14,22 @@
 
 [sub_resource type="Resource" id="Resource_3igp5"]
 script = ExtResource("5_hqhxj")
+axial_tilt = 15.0
 atmosphere_density = 0.5
 greenhouse_strength = 0.1
+metadata/_custom_type_script = "uid://ifpppwwjb38d"
+
+[sub_resource type="Resource" id="Resource_fyi6v"]
+script = ExtResource("5_hqhxj")
+axial_tilt = 42.3
+mass_earths = 0.7
+metadata/_custom_type_script = "uid://ifpppwwjb38d"
+
+[sub_resource type="Resource" id="Resource_xatjt"]
+script = ExtResource("5_hqhxj")
+axial_tilt = 5.6
+mass_earths = 1.7000000000000002
+atmosphere_density = 0.2
 metadata/_custom_type_script = "uid://ifpppwwjb38d"
 
 [sub_resource type="Animation" id="Animation_qk7nr"]
@@ -136,6 +150,19 @@ semi_major_axis = 100.0
 eccentricity = 0.5
 gizmo_handle = NodePath("../../../../GizmoHandle")
 orbit_target = NodePath("../../../Star/AnimatableBody2D")
+terraforming_data = SubResource("Resource_fyi6v")
+
+[node name="VenusOrbit" type="Node2D" parent="SystemMap" unique_id=1336209198]
+
+[node name="Planet3" parent="SystemMap/VenusOrbit" unique_id=1903291637 instance=ExtResource("1_68j0k")]
+
+[node name="AnimatableBody2D" parent="SystemMap/VenusOrbit/Planet3" index="0" unique_id=1389764719 node_paths=PackedStringArray("gizmo_handle", "orbit_target")]
+object_name = "Venus"
+semi_major_axis = 300.0
+eccentricity = 0.5
+gizmo_handle = NodePath("../../../../GizmoHandle")
+orbit_target = NodePath("../../../Star/AnimatableBody2D")
+terraforming_data = SubResource("Resource_xatjt")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1293292192]
 
@@ -445,3 +472,4 @@ texture = ExtResource("9_7ifds")
 [editable path="SystemMap/EarthOrbit/Planet1"]
 [editable path="SystemMap/EarthOrbit/Planet1/AnimatableBody2D/Moon"]
 [editable path="SystemMap/MarsOrbit/Planet2"]
+[editable path="SystemMap/VenusOrbit/Planet3"]

@@ -269,9 +269,16 @@ func create_planet_visual() -> void:
 	planet_visual.add_child(active_planet_visual)
 
 	make_materials_unique(active_planet_visual)
-
-	active_planet_visual.scale = Vector2(0.3, 0.3)
-	active_planet_visual.position = Vector2(-15, -15)
+	
+	if terraforming_data.mass_earths == 1:
+		active_planet_visual.scale = Vector2(0.3, 0.3)
+		active_planet_visual.position = Vector2(-15, -15)
+	elif terraforming_data.mass_earths > 1:
+		active_planet_visual.scale = Vector2(0.37, 0.37)
+		active_planet_visual.position = Vector2(-18.55, -18.55)
+	else:
+		active_planet_visual.scale = Vector2(0.25, 0.25)
+		active_planet_visual.position = Vector2(-13, -13)
 
 	planet_visual.rotation = deg_to_rad(terraforming_data.axial_tilt)
 
