@@ -361,6 +361,8 @@ func _on_orbit_size_slider_changed(value: float) -> void:
 		# Reposition gizmo handle to match new orbit scale
 		if gizmo_handle:
 			gizmo_handle.update_position()
+	
+	selected_planet.update_planet_type()
 
 # --- GIZMO CALLBACK (Changes Eccentricity) ---
 
@@ -369,6 +371,8 @@ func _on_gizmo_eccentricity_changed(new_e: float) -> void:
 		selected_planet.eccentricity = new_e
 		_update_terraform_button_state()
 		_update_habitability_label_state()
+	
+	selected_planet.update_planet_type()
 
 func _update_size_label(val: float) -> void:
 	if orbit_size_label:

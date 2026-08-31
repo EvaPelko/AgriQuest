@@ -9,12 +9,14 @@ extends AnimatableBody2D
 		semi_major_axis = max(30.0, value)
 		draw_orbit_ring()
 		check_orbit_habitability()
+		update_planet_type()
 
 @export var eccentricity: float = 0.05: # Oval shape (Controlled by Gizmo) (0 = perfect circle, 0.9 = flat oval)
 	set(value):
 		eccentricity = clamp(value, 0.0, 0.70)
 		draw_orbit_ring()
 		check_orbit_habitability()
+		update_planet_type()
 
 @export var max_trail_length: int = 200
 
@@ -70,6 +72,7 @@ var angle: float = 0.0
 @onready var orbit_ring: Line2D = $OrbitRing
 
 func _ready() -> void:
+	terraforming_data.planet_type_changed.connect(_on_planet_type_changed)
 	print("Planet visual: ", planet_visual)
 	create_planet_visual()
 	if movement_trail:
@@ -244,26 +247,51 @@ func get_planet_scene() -> PackedScene:
 		TerraformingData.PlanetType.DRY_TERRAIN:
 			return DRY_TERRAIN_SCENE
 
-	return RIVERS_SCENE
+		TerraformingData.PlanetType.ICE:
+			return ICE_SCENE
+
+		TerraformingData.PlanetType.NO_ATMOSPHERE:
+			return NO_ATMOSPHERE_SCENE
+
+	return DRY_TERRAIN_SCENE
 
 func create_planet_visual() -> void:
 	if not terraforming_data:
 		return
 
+	if active_planet_visual:
+		active_planet_visual.queue_free()
+		active_planet_visual = null
+
 	var scene := get_planet_scene()
 	active_planet_visual = scene.instantiate()
 
 	planet_visual.add_child(active_planet_visual)
-	
+
 	make_materials_unique(active_planet_visual)
 
-	# Make visual sit directly on the orbital body's anchor
 	active_planet_visual.scale = Vector2(0.3, 0.3)
 	active_planet_visual.position = Vector2(-15, -15)
-	
+
 	planet_visual.rotation = deg_to_rad(terraforming_data.axial_tilt)
-	
+
 	disable_mouse_on_controls(active_planet_visual)
+
+func update_planet_type() -> void:
+	if not terraforming_data:
+		return
+
+	var old_type = terraforming_data.planet_type
+
+	terraforming_data.update_planet_type()
+
+	if terraforming_data.planet_type == old_type:
+		return
+
+	create_planet_visual()
+
+func _on_planet_type_changed() -> void:
+	create_planet_visual()
 
 func disable_mouse_on_controls(node: Node) -> void:
 	if node is Control:

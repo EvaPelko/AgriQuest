@@ -11,11 +11,29 @@ var rotation_period_hours: float = 24.0
 # --- PLANETARY PROPERTIES ---
 @export_range(0.1, 5.0, 0.1)
 var mass_earths: float = 1.0
-@export var atmosphere_density: float = 1.0
-@export var greenhouse_strength: float = 0.3
-@export var albedo: float = 0.3
-@export var geothermal_heat: float = 0.0
-@export var water_amount: float = 0.5
+
+@export var atmosphere_density: float = 1.0:
+	set(value):
+		atmosphere_density = value
+		update_planet_type()
+@export var greenhouse_strength: float = 0.3:
+	set(value):
+		greenhouse_strength = value
+		update_planet_type()
+@export var albedo: float = 0.3:
+	set(value):
+		albedo = value
+		update_planet_type()
+@export var geothermal_heat: float = 0.0:
+	set(value):
+		geothermal_heat = value
+		update_planet_type()
+@export var water_amount: float = 0.5:
+	set(value):
+		water_amount = value
+		update_planet_type()
+
+signal planet_type_changed
 
 var temperature: float = 0.0
 
@@ -67,16 +85,35 @@ func generate_planet_type(distance_from_star: float) -> String:
 		return "gas_giant"		
 
 func determine_planet_type() -> PlanetType:
-	if temperature > 80.0 and water_amount < 0.2:
+	if temperature > 80.0:
 		return PlanetType.LAVA
 
 	if temperature < -20.0:
 		return PlanetType.ICE
 
-	if water_amount > 0.7:
+	if atmosphere_density < 0.3:
+		return PlanetType.NO_ATMOSPHERE
+
+	# Habitable-looking world
+	if (
+		temperature >= -10.0
+		and temperature <= 30.0
+		and atmosphere_density >= 0.5
+		and atmosphere_density <= 1.5
+		and water_amount >= 0.4
+	):
 		return PlanetType.RIVERS
 
 	return PlanetType.DRY_TERRAIN
+
+func update_planet_type() -> void:
+	var new_type = determine_planet_type()
+
+	if new_type == planet_type:
+		return
+
+	planet_type = new_type
+	planet_type_changed.emit()
 
 func calculate_temperature(distance_au: float) -> float:
 	# Prevent division by zero
