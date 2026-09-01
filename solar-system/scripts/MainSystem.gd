@@ -11,6 +11,7 @@ var terraforming_energy: int = 10
 @export var terraforming_energy_label: Label
 var nitrogen_amount: int = 5
 @export var nitrogen_amount_label: Label
+@export var colony_amount_label: Label
 
 @export_category("Planet info")
 @export var name_label: Label
@@ -618,7 +619,12 @@ func _update_colony_button() -> void:
 	if not selected_planet:
 		add_colony_button.disabled = true
 		return
-	
+		
+	if selected_planet.has_colony:
+		colony_amount_label.text = "Colony amount: 1"
+	else:
+		colony_amount_label.text = "Colony amount: 0"
+		
 	add_colony_button.disabled = (
 		not selected_planet.is_terraformed
 		or selected_planet.has_colony

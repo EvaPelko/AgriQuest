@@ -69,7 +69,7 @@ _data = {
 &"notification": SubResource("Animation_lnafm")
 }
 
-[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "terraforming_energy_label", "nitrogen_amount_label", "name_label", "speed_label", "habitability_zone_label", "season_label", "temperature_label", "temperature_range_label", "terraforming_hud_canvas", "planet_info_canvas", "planet_info_panel", "orbit_size_slider", "orbit_size_label", "terraforming_panel", "land_color_slider", "land_color_label", "rivers_color_slider", "rivers_color_label", "cloud_color_slider", "cloud_color_label", "axial_tilt_panel", "axial_tilt_slider", "axial_tilt_label", "terraformed_label", "add_greenhouse_gasses_button", "remove_greenhouse_gasses_button", "add_geothermal_heat_button", "remove_geothermal_heat_button", "add_nitrogen_button", "remove_nitrogen_button", "add_colony_button", "notification_manager", "climate_graph", "end_screen_canvas", "restart_button", "restart_button_orbit")]
+[node name="Node2D" type="Node2D" unique_id=669897972 node_paths=PackedStringArray("camera", "terraform_button", "orbit_button", "gizmo_handle", "terraforming_energy_label", "nitrogen_amount_label", "colony_amount_label", "name_label", "speed_label", "habitability_zone_label", "season_label", "temperature_label", "temperature_range_label", "terraforming_hud_canvas", "planet_info_canvas", "planet_info_panel", "orbit_size_slider", "orbit_size_label", "terraforming_panel", "land_color_slider", "land_color_label", "rivers_color_slider", "rivers_color_label", "cloud_color_slider", "cloud_color_label", "axial_tilt_panel", "axial_tilt_slider", "axial_tilt_label", "terraformed_label", "add_greenhouse_gasses_button", "remove_greenhouse_gasses_button", "add_geothermal_heat_button", "remove_geothermal_heat_button", "add_nitrogen_button", "remove_nitrogen_button", "add_colony_button", "notification_manager", "climate_graph", "end_screen_canvas", "restart_button", "restart_button_orbit")]
 script = ExtResource("1_licsr")
 camera = NodePath("Camera2D")
 terraform_button = NodePath("CanvasLayer/SelectionPanel/TerraformButton")
@@ -77,6 +77,7 @@ orbit_button = NodePath("CanvasLayer/SelectionPanel/OrbitButton")
 gizmo_handle = NodePath("GizmoHandle")
 terraforming_energy_label = NodePath("CanvasLayer/TerraformingHUD/TerraformingEnergyLabel")
 nitrogen_amount_label = NodePath("CanvasLayer/TerraformingHUD/NitrogenAmountLabel")
+colony_amount_label = NodePath("CanvasLayer/TerraformingHUD/ColonyAmountLabel")
 name_label = NodePath("CanvasLayer/CanvasLayer/PlanetNameLabel")
 speed_label = NodePath("CanvasLayer/CanvasLayer/PlanetSpeedLabel")
 habitability_zone_label = NodePath("CanvasLayer/CanvasLayer/HabitableZoneLabel")
@@ -241,6 +242,7 @@ offset_right = 971.0
 offset_bottom = 189.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/TerraformingHUD/TerraformingPanel" unique_id=501848567]
+visible = false
 layout_mode = 2
 
 [node name="LandColorLabel" type="Label" parent="CanvasLayer/TerraformingHUD/TerraformingPanel/VBoxContainer" unique_id=449362526]
@@ -325,6 +327,13 @@ offset_top = 101.0
 offset_right = 1106.0
 offset_bottom = 132.0
 text = "Add colony"
+
+[node name="ColonyAmountLabel" type="Label" parent="CanvasLayer/TerraformingHUD" unique_id=1387696686]
+offset_left = 918.0
+offset_top = 146.0
+offset_right = 1083.0
+offset_bottom = 169.0
+text = "Colony amount: 0"
 
 [node name="PlanetInfoPanel" type="PanelContainer" parent="CanvasLayer" unique_id=534216205]
 offset_left = 469.0

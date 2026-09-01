@@ -54,6 +54,7 @@ var colony_timer: float = 0.0
 signal planet_selected(planet_ref: Node2D)
 signal planet_deselected
 signal colony_energy_generated(planet: Node2D, amount: float)
+signal colony_destroyed
 
 @export_category("Terraforming")
 @export var terraforming_data = TerraformingData.new()
@@ -124,6 +125,8 @@ func setup_orbit_target() -> void:
 	draw_orbit_ring()
 
 func _process(delta: float) -> void:
+	update_planet_light()
+	
 	if not orbit_target:
 		return
 	
@@ -502,7 +505,32 @@ func destroy_colony() -> void:
 
 	has_colony = false
 	colony_timer = 0.0
+	
+	colony_destroyed.emit()
 
 	# Return land color
 	if active_planet_visual:
 		active_planet_visual.shift_planet_land_hue(0.0)
+
+func update_planet_light() -> void:
+	if not active_planet_visual:
+		return
+
+	if not star_node:
+		return
+
+	var direction_to_star := (
+		star_node.global_position - global_position
+	).normalized()
+
+	# Convert world-space direction into the tilted planet's local space
+	var local_direction := direction_to_star.rotated(
+		-planet_visual.global_rotation
+	)
+
+	var light_pos := Vector2(
+		0.5 + local_direction.x * 0.5,
+		0.5 + local_direction.y * 0.5
+	)
+
+	active_planet_visual.set_light(light_pos)
